@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>My Simple Dashboard</title>
+  <meta name="robots" content="noindex,nofollow" />
   <style>
     body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans JP",sans-serif;background:#fff;color:#111}
     header{padding:14px 16px;border-bottom:1px solid #e5e7eb;position:sticky;top:0;background:#fff;z-index:10}
@@ -23,8 +24,10 @@
     @media (max-width: 900px){.row{grid-template-columns:1fr}}
     .pill{font-size:12px;border:1px solid #e5e7eb;border-radius:999px;padding:2px 8px;color:#374151}
     .status{margin-bottom:12px;padding:10px 12px;border:1px solid #e5e7eb;border-radius:12px;background:#f9fafb}
-    .status b{font-weight:700}
     .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;white-space:pre-wrap}
+    details{margin-top:8px}
+    summary{cursor:pointer;color:#374151;font-size:12px}
+    .hint{font-size:12px;color:#374151;background:#fff7ed;border:1px solid #fed7aa;padding:8px 10px;border-radius:10px}
   </style>
 </head>
 <body>
@@ -35,7 +38,7 @@
   <div class="wrap">
     <div id="status" class="status">
       <b>状態</b>：読み込み中…
-      <div class="muted">（うまく取れない場合も、ここに理由を出します）</div>
+      <div class="muted">（ニュースが出ない時は、下の「詳細」を開くと原因が見えます）</div>
     </div>
 
     <!-- 金と原油（TradingView） -->
@@ -62,6 +65,10 @@
         <div class="body">
           <div class="muted">Google News RSSで「saitama-np.co.jp」の記事だけ拾います。</div>
           <ul id="saitamaList"><li class="muted">読み込み中…</li></ul>
+          <details>
+            <summary>詳細（うまく出ない時）</summary>
+            <div id="saitamaDebug" class="muted mono"></div>
+          </details>
         </div>
       </section>
 
@@ -69,14 +76,22 @@
         <h2>Yahooニュース（見出し） <span class="pill">自動</span></h2>
         <div class="body">
           <ul id="yahooList"><li class="muted">読み込み中…</li></ul>
+          <details>
+            <summary>詳細（うまく出ない時）</summary>
+            <div id="yahooDebug" class="muted mono"></div>
+          </details>
         </div>
       </section>
 
       <section class="card">
         <h2>Bloomberg（見出し） <span class="pill">自動</span></h2>
         <div class="body">
-          <div class="muted">Google News RSSで「Bloombergのドメイン」を拾います（公式RSSが一定しないため）。</div>
+          <div class="muted">Google News RSSで「Bloombergのドメイン」を拾います。</div>
           <ul id="bloombergList"><li class="muted">読み込み中…</li></ul>
+          <details>
+            <summary>詳細（うまく出ない時）</summary>
+            <div id="bloombergDebug" class="muted mono"></div>
+          </details>
         </div>
       </section>
 
@@ -86,22 +101,23 @@
           <ul>
             <li><a href="https://x.com/TsutsumiMika" target="_blank" rel="noopener">堤未果さん（X）</a></li>
           </ul>
-          <div class="muted">※このページは「自分用まとめ」です（noindex推奨）。</div>
+          <div class="hint">
+            ニュースが「見つかりませんでした」になるときは、<br>
+            だいたい <b>CORS中継がブロック/不調</b> です。<br>
+            その場合、Cloudflare Workerを「中継」にすると安定します（希望あれば案内するよ）。
+          </div>
         </div>
       </section>
     </div>
   </div>
 
   <script>
-    // ---- ここがポイント：無料CORS中継を「複数」試して、取れたやつを採用する ----
-    // どれも無料なので、たまに落ちます。落ちても次へ行く設計にしてあります。
+    // ========= 無料CORS中継（落ちても次を試す） =========
+    // ※ あなたのCloudflare Workerを“/proxy”対応で持っているなら、ここを先頭に入れると最強：
+    // (u) => "https://あなたのworker.workers.dev/proxy?url=" + encodeURIComponent(u),
     const PROXIES = [
-      // allorigins（raw）
       (u) => "https://api.allorigins.win/raw?url=" + encodeURIComponent(u),
-      // codetabs（※動かない時もある）
       (u) => "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(u),
-      // (任意) あなたのCloudflare Workerを使うならここに追加できる：
-      // (u) => "https://square-union-92c7.ryobump33262.workers.dev/proxy?url=" + encodeURIComponent(u),
     ];
 
     const statusEl = document.getElementById("status");
@@ -113,33 +129,70 @@
       let lastErr = "";
       for (const p of PROXIES){
         try{
-          const res = await fetch(p(url), { cache: "no-store" });
+          const target = p(url);
+          const res = await fetch(target, { cache: "no-store" });
           if(!res.ok) throw new Error("HTTP " + res.status);
-          return await res.text();
+          const text = await res.text();
+          return { text, used: target };
         }catch(e){
           lastErr = String(e);
         }
       }
-      throw new Error("どの中継でも取得できませんでした: " + lastErr);
+      throw new Error("中継が全滅: " + lastErr);
     }
 
-    function parseRss(xmlText){
+    // ========= RSS/Atom 両対応パーサ =========
+    function parseFeed(xmlText){
       const xml = new DOMParser().parseFromString(xmlText, "text/xml");
-      const items = Array.from(xml.querySelectorAll("item")).slice(0, 10);
-      return items.map(it => ({
-        title: (it.querySelector("title")?.textContent || "").trim(),
-        link: (it.querySelector("link")?.textContent || "").trim()
-      })).filter(x => x.title && x.link);
+
+      // RSS 2.0: <item>
+      const items = Array.from(xml.querySelectorAll("item"));
+      if (items.length) {
+        return items.slice(0, 10).map(it => ({
+          title: (it.querySelector("title")?.textContent || "").trim(),
+          link: (it.querySelector("link")?.textContent || "").trim()
+        })).filter(x => x.title && x.link);
+      }
+
+      // Atom: <entry> + <link href="...">
+      const entries = Array.from(xml.querySelectorAll("entry"));
+      if (entries.length) {
+        return entries.slice(0, 10).map(en => {
+          const title = (en.querySelector("title")?.textContent || "").trim();
+          const linkEl = en.querySelector("link");
+          const link = (linkEl?.getAttribute("href") || linkEl?.textContent || "").trim();
+          return { title, link };
+        }).filter(x => x.title && x.link);
+      }
+
+      return [];
     }
 
-    async function loadRssToList(rssUrl, listId){
-      const ul = document.getElementById(listId);
-      ul.innerHTML = "<li class='muted'>読み込み中…</li>";
-      const xmlText = await fetchViaProxies(rssUrl);
-      const items = parseRss(xmlText);
+    function looksLikeFeed(text){
+      return text.includes("<rss") || text.includes("<feed") || text.includes("<channel") || text.includes("<item") || text.includes("<entry");
+    }
 
+    async function loadFeed(rssUrl, listId, debugId){
+      const ul = document.getElementById(listId);
+      const dbg = document.getElementById(debugId);
+      ul.innerHTML = "<li class='muted'>読み込み中…</li>";
+      dbg.textContent = "";
+
+      const { text, used } = await fetchViaProxies(rssUrl);
+
+      // デバッグ情報（どの中継を使ったか / 先頭の一部）
+      const head = text.slice(0, 400).replaceAll("\r", "");
+      dbg.textContent = "取得URL:\n" + rssUrl + "\n\n中継:\n" + used + "\n\n先頭400文字:\n" + head;
+
+      if (!looksLikeFeed(text)){
+        ul.innerHTML = "<li class='muted'>RSSではない内容が返りました（ブロック/制限の可能性）。詳細を開いてください。</li>";
+        return;
+      }
+
+      const items = parseFeed(text);
       ul.innerHTML = "";
-      for(const it of items){
+
+      for (const it of items){
         const li = document.createElement("li");
         const a = document.createElement("a");
         a.href = it.link;
@@ -149,8 +202,9 @@
         li.appendChild(a);
         ul.appendChild(li);
       }
+
       if(items.length === 0){
-        ul.innerHTML = "<li class='muted'>見出しが見つかりませんでした。</li>";
+        ul.innerHTML = "<li class='muted'>見出しが見つかりませんでした（詳細を開いて中身を確認してください）。</li>";
       }
     }
 
@@ -158,29 +212,24 @@
       try{
         setStatus("状態：読み込み中…", "ニュース見出しを取得しています。");
 
-        // Yahoo RSS（公式トピックス）
         const YAHOO = "https://news.yahoo.co.jp/rss/topics/top-picks.xml";
-
-        // 埼玉新聞：Google News RSSで site:saitama-np.co.jp を抽出
         const SAITAMA = "https://news.google.com/rss/search?q=site:saitama-np.co.jp&hl=ja&gl=JP&ceid=JP:ja";
-
-        // Bloomberg：Google News RSSで bloomberg の記事を抽出（JP優先）
         const BLOOMBERG = "https://news.google.com/rss/search?q=site:bloomberg.co.jp%20OR%20site:bloomberg.com&hl=ja&gl=JP&ceid=JP:ja";
 
         await Promise.all([
-          loadRssToList(SAITAMA, "saitamaList"),
-          loadRssToList(YAHOO, "yahooList"),
-          loadRssToList(BLOOMBERG, "bloombergList"),
+          loadFeed(SAITAMA, "saitamaList", "saitamaDebug"),
+          loadFeed(YAHOO, "yahooList", "yahooDebug"),
+          loadFeed(BLOOMBERG, "bloombergList", "bloombergDebug"),
         ]);
 
-        setStatus("状態：OK", "表示に成功しました。うまく出ない枠があれば、その枠だけ対策します。");
+        setStatus("状態：OK", "表示できました。もし特定枠だけダメなら、その枠の「詳細」を見て原因を特定できます。");
       }catch(e){
         setStatus("状態：通信エラー", String(e));
       }
     }
 
     main();
-    setInterval(main, 10 * 60 * 1000); // 10分おきに更新
+    setInterval(main, 10 * 60 * 1000);
   </script>
 </body>
 </html>
