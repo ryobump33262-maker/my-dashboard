@@ -116,9 +116,11 @@
     // ※ あなたのCloudflare Workerを“/proxy”対応で持っているなら、ここを先頭に入れると最強：
     // (u) => "https://あなたのworker.workers.dev/proxy?url=" + encodeURIComponent(u),
     const PROXIES = [
-      (u) => "https://api.allorigins.win/raw?url=" + encodeURIComponent(u),
-      (u) => "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(u),
-    ];
+  (u) => "https://square-union-92c7.ryobump33262.workers.dev/proxy?url=" + encodeURIComponent(u),
+  (u) => "https://api.allorigins.win/raw?url=" + encodeURIComponent(u),
+  (u) => "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(u),
+];
+
 
     const statusEl = document.getElementById("status");
     function setStatus(title, detail){
