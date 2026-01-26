@@ -1,94 +1,278 @@
-<style>body{background:#0b0f19;color:#e8eefc;font-family:system-ui}</style>
-const WORKER_BASE = "https://square-union-92c7.ryobump33262.workers.dev";
-const proxy = (u) => `${WORKER_BASE}/proxy?url=${encodeURIComponent(u)}`;
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>My Private Dashboard</title>
+  <style>
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans JP",sans-serif;background:#0b0f19;color:#e8eefc}
+    header{padding:18px 16px;border-bottom:1px solid rgba(255,255,255,.08);position:sticky;top:0;background:#0b0f19;z-index:10}
+    h1{font-size:18px;margin:0}
+    .grid{display:grid;gap:12px;padding:12px;grid-template-columns:repeat(12,1fr)}
+    .card{border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03);border-radius:14px;overflow:hidden}
+    .card h2{font-size:13px;margin:0;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .card h2 small{opacity:.75;font-weight:400}
+    .content{padding:10px 12px}
+    .span6{grid-column:span 6}
+    .span12{grid-column:span 12}
+    .span4{grid-column:span 4}
+    @media (max-width: 980px){ .span6,.span4{grid-column:span 12} }
+    iframe{width:100%;height:420px;border:0}
+    .small iframe{height:320px}
+    a{color:#a9c7ff}
+    ul{margin:0;padding-left:18px}
+    li{margin:6px 0;line-height:1.45}
+    .muted{opacity:.75}
+    table{width:100%;border-collapse:collapse;font-size:13px}
+    th,td{padding:6px 8px;border-bottom:1px solid rgba(255,255,255,.08);text-align:right}
+    th:first-child, td:first-child{text-align:left}
+    .pill{display:inline-block;padding:2px 8px;border:1px solid rgba(255,255,255,.15);border-radius:999px;font-size:12px}
+    .twoCol{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media (max-width: 980px){ .twoCol{grid-template-columns:1fr} }
+    .banner{margin:12px;padding:10px 12px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,180,0,.06)}
+    .ok{background:rgba(0,200,120,.08)}
+    .err{background:rgba(255,80,80,.08)}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>My Private Dashboard</h1>
+  </header>
 
-// RSS -> 見出し表示
-function parseRss(xmlText) {
-  const xml = new DOMParser().parseFromString(xmlText, "text/xml");
-  return Array.from(xml.querySelectorAll("item")).slice(0, 10).map(it => ({
-    title: (it.querySelector("title")?.textContent || "").trim(),
-    link: (it.querySelector("link")?.textContent || "").trim(),
-  })).filter(x => x.title && x.link);
-}
+  <!-- ここにエラーや状態を表示 -->
+  <div id="statusBox" class="banner ok">
+    <div><b>状態</b>：起動しました</div>
+    <div class="muted">もし何か失敗しても、この欄に理由が出ます。</div>
+  </div>
 
-async function loadRSS(rssUrl, elementId) {
-  const ul = document.getElementById(elementId);
-  ul.innerHTML = "<li>読み込み中…</li>";
-  try {
-    const res = await fetch(proxy(rssUrl));
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const text = await res.text();
-    const items = parseRss(text);
+  <main class="grid">
 
-    ul.innerHTML = "";
-    for (const it of items) {
-      const li = document.createElement("li");
-      const a = document.createElement("a");
-      a.href = it.link;
-      a.textContent = it.title;
-      a.target = "_blank";
-      a.rel = "noopener";
-      li.appendChild(a);
-      ul.appendChild(li);
+    <!-- 為替（TradingView） -->
+    <section class="card span12">
+      <h2>FX（USDJPY）<small class="muted">TradingView</small></h2>
+      <div class="content">
+        <iframe
+          src="https://s.tradingview.com/widgetembed/?symbol=FX%3AUSDJPY&interval=60&hidesidetoolbar=1&theme=dark&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+        </iframe>
+      </div>
+    </section>
+
+    <!-- 為替：JPYベース全通貨一覧（Frankfurter） -->
+    <section class="card span12">
+      <h2>円ベース：全通貨レート（参照レート）<small id="fxUpdated" class="muted">更新: -</small></h2>
+      <div class="content">
+        <div class="muted" style="margin-bottom:8px;">出典：Frankfurter（ECB参照レート系）</div>
+        <div style="max-height:420px;overflow:auto;border:1px solid rgba(255,255,255,.08);border-radius:12px;">
+          <table id="fxTable">
+            <thead>
+              <tr><th>通貨</th><th>1 JPY =</th></tr>
+            </thead>
+            <tbody id="fxTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- 貴金属 -->
+    <section class="card span6">
+      <h2>Gold（XAUUSD）<small class="muted">TVC:GOLD</small></h2>
+      <div class="content">
+        <iframe src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AGOLD&interval=60&hidesidetoolbar=1&theme=dark&timezone=Asia%2FTokyo&withdateranges=1"></iframe>
+      </div>
+    </section>
+
+    <section class="card span6">
+      <h2>Silver（XAGUSD）<small class="muted">TVC:SILVER</small></h2>
+      <div class="content">
+        <iframe src="https://s.tradingview.com/widgetembed/?symbol=TVC%3ASILVER&interval=60&hidesidetoolbar=1&theme=dark&timezone=Asia%2FTokyo&withdateranges=1"></iframe>
+      </div>
+    </section>
+
+    <!-- コモディティ -->
+    <section class="card span4 small">
+      <h2>Copper（銅）<small class="muted">COMEX:HG1!</small></h2>
+      <div class="content">
+        <iframe src="https://s.tradingview.com/widgetembed/?symbol=COMEX%3AHG1!&interval=240&hidesidetoolbar=1&theme=dark&timezone=Asia%2FTokyo&withdateranges=1"></iframe>
+      </div>
+    </section>
+
+    <section class="card span4 small">
+      <h2>Platinum（プラチナ）<small class="muted">NYMEX:PL1!</small></h2>
+      <div class="content">
+        <iframe src="https://s.tradingview.com/widgetembed/?symbol=NYMEX%3APL1!&interval=240&hidesidetoolbar=1&theme=dark&timezone=Asia%2FTokyo&withdateranges=1"></iframe>
+      </div>
+    </section>
+
+    <section class="card span4 small">
+      <h2>WTI Crude（原油）<small class="muted">TVC:USOIL</small></h2>
+      <div class="content">
+        <iframe src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AUSOIL&interval=240&hidesidetoolbar=1&theme=dark&timezone=Asia%2FTokyo&withdateranges=1"></iframe>
+      </div>
+    </section>
+
+    <section class="card span4 small">
+      <h2>Natural Gas（天然ガス）<small class="muted">NYMEX:NG1!</small></h2>
+      <div class="content">
+        <iframe src="https://s.tradingview.com/widgetembed/?symbol=NYMEX%3ANG1!&interval=240&hidesidetoolbar=1&theme=dark&timezone=Asia%2FTokyo&withdateranges=1"></iframe>
+      </div>
+    </section>
+
+    <section class="card span4 small">
+      <h2>Wheat（小麦）<small class="muted">CBOT:ZW1!</small></h2>
+      <div class="content">
+        <iframe src="https://s.tradingview.com/widgetembed/?symbol=CBOT%3AZW1!&interval=240&hidesidetoolbar=1&theme=dark&timezone=Asia%2FTokyo&withdateranges=1"></iframe>
+      </div>
+    </section>
+
+    <section class="card span4 small">
+      <h2>Corn（とうもろこし）<small class="muted">CBOT:ZC1!</small></h2>
+      <div class="content">
+        <iframe src="https://s.tradingview.com/widgetembed/?symbol=CBOT%3AZC1!&interval=240&hidesidetoolbar=1&theme=dark&timezone=Asia%2FTokyo&withdateranges=1"></iframe>
+      </div>
+    </section>
+
+    <!-- ニュース（RSS見出し） -->
+    <section class="card span12">
+      <h2>ニュース見出し <small class="muted">自動更新</small></h2>
+      <div class="content twoCol">
+        <div>
+          <h3 style="margin:0 0 8px;font-size:14px;">埼玉新聞（見出し）</h3>
+          <div class="muted" style="margin-bottom:8px;">Google News RSSで「saitama-np.co.jp」の記事のみ抽出</div>
+          <ul id="saitamaList"><li class="muted">読み込み中…</li></ul>
+        </div>
+        <div>
+          <h3 style="margin:0 0 8px;font-size:14px;">Yahooニュース（トピックス）</h3>
+          <ul id="yahooList"><li class="muted">読み込み中…</li></ul>
+        </div>
+      </div>
+
+      <div class="content" style="padding-top:0;">
+        <div class="muted">堤未果さん（X）： <a href="https://x.com/TsutsumiMika" target="_blank" rel="noopener">https://x.com/TsutsumiMika</a></div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // === ここが心臓部 ===
+    const WORKER_BASE = "https://square-union-92c7.ryobump33262.workers.dev";
+    const proxy = (u) => `${WORKER_BASE}/proxy?url=${encodeURIComponent(u)}`;
+
+    const statusBox = document.getElementById("statusBox");
+    function setStatus(kind, title, detail){
+      statusBox.className = "banner " + (kind === "err" ? "err" : "ok");
+      statusBox.innerHTML = `
+        <div><b>${title}</b></div>
+        <div class="muted mono">${detail || ""}</div>
+      `;
     }
-    if (items.length === 0) ul.innerHTML = "<li>記事が見つかりませんでした</li>";
-  } catch (e) {
-    ul.innerHTML = `<li>読み込み失敗：${e.message}</li>`;
-  }
-}
 
-// 為替（Frankfurter）-> テーブル表示
-async function loadFX() {
-  const tbody = document.getElementById("fxTable");
-  tbody.innerHTML = `<tr><td>読み込み中…</td><td></td></tr>`;
+    // 真っ白防止：エラーは全部画面上に出す
+    window.addEventListener("error", (e) => {
+      setStatus("err", "JSエラーが発生", `${e.message}\n${e.filename||""}:${e.lineno||""}`);
+    });
+    window.addEventListener("unhandledrejection", (e) => {
+      setStatus("err", "通信エラー/Promiseエラー", `${e.reason?.message || e.reason}`);
+    });
 
-  try {
-    const url = "https://api.frankfurter.dev/v1/latest?base=JPY";
-    const res = await fetch(proxy(url));
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-
-    const rows = Object.entries(data.rates)
-      .map(([cur, rate]) => ({ cur, rate }))
-      .sort((a, b) => a.cur.localeCompare(b.cur));
-
-    tbody.innerHTML = "";
-    for (const r of rows) {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `<td>${r.cur}</td><td>${Number(r.rate).toFixed(6)}</td>`;
-      tbody.appendChild(tr);
+    // RSSパース
+    function parseRss(xmlText) {
+      const xml = new DOMParser().parseFromString(xmlText, "text/xml");
+      return Array.from(xml.querySelectorAll("item")).slice(0, 12).map(it => ({
+        title: (it.querySelector("title")?.textContent || "").trim(),
+        link: (it.querySelector("link")?.textContent || "").trim(),
+        pubDate: (it.querySelector("pubDate")?.textContent || "").trim(),
+      })).filter(x => x.title && x.link);
     }
-  } catch (e) {
-    tbody.innerHTML = `<tr><td>為替表の読み込み失敗</td><td>${e.message}</td></tr>`;
-  }
-}
 
-// ①Yahooニュース
-loadRSS("https://news.yahoo.co.jp/rss/topics/top-picks.xml", "yahoo");
+    async function loadHeadlines(rssUrl, ulId) {
+      const ul = document.getElementById(ulId);
+      if (!ul) throw new Error(`要素が見つかりません: #${ulId}`);
+      ul.innerHTML = `<li class="muted">読み込み中…</li>`;
 
-// ②埼玉新聞（Google Newsでsaitama-np.co.jpだけ）
-loadRSS("https://news.google.com/rss/search?q=site:saitama-np.co.jp&hl=ja&gl=JP&ceid=JP:ja", "saitama");
+      const res = await fetch(proxy(rssUrl));
+      if (!res.ok) throw new Error(`RSS取得失敗: HTTP ${res.status}`);
 
-// ③円ベース全通貨
-loadFX();
+      const xmlText = await res.text();
+      const items = parseRss(xmlText);
 
-// 自動更新（10分）
-setInterval(() => {
-  loadRSS("https://news.yahoo.co.jp/rss/topics/top-picks.xml", "yahoo");
-  loadRSS("https://news.google.com/rss/search?q=site:saitama-np.co.jp&hl=ja&gl=JP&ceid=JP:ja", "saitama");
-  loadFX();
-}, 10 * 60 * 1000);
-<script>
-window.addEventListener("error", (e) => {
-  document.body.innerHTML = "<pre style='white-space:pre-wrap;padding:12px'>JSエラー:\n" + (e.message || e.error) + "\n\n場所: " + (e.filename||"") + ":" + (e.lineno||"") + "</pre>";
-});
+      ul.innerHTML = "";
+      for (const it of items) {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.href = it.link;
+        a.target = "_blank";
+        a.rel = "noopener";
+        a.textContent = it.title;
+        li.appendChild(a);
+        ul.appendChild(li);
+      }
 
-window.addEventListener("unhandledrejection", (e) => {
-  document.body.innerHTML = "<pre style='white-space:pre-wrap;padding:12px'>Promiseエラー:\n" + (e.reason?.message || e.reason) + "</pre>";
-});
+      if (!items.length) {
+        ul.innerHTML = `<li class="muted">見出しが見つかりませんでした。</li>`;
+      }
+    }
 
-document.body.insertAdjacentHTML("afterbegin",
-  "<div style='padding:12px'><h1 style='margin:0 0 8px'>表示テスト</h1><div id='status'>JSは動いてます</div></div>"
-);
-</script>
+    async function loadFxTable() {
+      const updatedEl = document.getElementById("fxUpdated");
+      const tbody = document.getElementById("fxTbody");
+      if (!updatedEl || !tbody) throw new Error("為替テーブル要素が見つかりません");
 
+      tbody.innerHTML = `<tr><td class="muted">読み込み中…</td><td></td></tr>`;
+
+      const currenciesUrl = "https://api.frankfurter.dev/v1/currencies";
+      const latestUrl = "https://api.frankfurter.dev/v1/latest?base=JPY";
+
+      // Worker経由で取得（CORS回避）
+      const [curRes, rateRes] = await Promise.all([fetch(proxy(currenciesUrl)), fetch(proxy(latestUrl))]);
+      if (!curRes.ok) throw new Error(`通貨一覧取得失敗: HTTP ${curRes.status}`);
+      if (!rateRes.ok) throw new Error(`レート取得失敗: HTTP ${rateRes.status}`);
+
+      const currencies = await curRes.json();
+      const data = await rateRes.json();
+
+      updatedEl.textContent = `更新: ${data.date}（基準レート）`;
+
+      const rows = Object.entries(data.rates)
+        .map(([code, rate]) => ({ code, name: currencies[code] || "", rate }))
+        .sort((a,b) => a.code.localeCompare(b.code));
+
+      tbody.innerHTML = "";
+      for (const r of rows) {
+        const tr = document.createElement("tr");
+        const td1 = document.createElement("td");
+        td1.textContent = `${r.code}${r.name ? " — " + r.name : ""}`;
+        const td2 = document.createElement("td");
+        td2.textContent = Number(r.rate).toFixed(6);
+        tr.appendChild(td1);
+        tr.appendChild(td2);
+        tbody.appendChild(tr);
+      }
+    }
+
+    async function main() {
+      setStatus("ok", "状態：読み込み中", "ニュースと為替を取得しています…");
+
+      // ニュース
+      await Promise.all([
+        loadHeadlines("https://news.yahoo.co.jp/rss/topics/top-picks.xml", "yahooList"),
+        loadHeadlines("https://news.google.com/rss/search?q=site:saitama-np.co.jp&hl=ja&gl=JP&ceid=JP:ja", "saitamaList"),
+      ]);
+
+      // 為替表
+      await loadFxTable();
+
+      setStatus("ok", "状態：OK", "ニュース・為替の表示に成功しました。");
+    }
+
+    main();
+
+    // 自動更新（10分）
+    setInterval(() => {
+      main().catch(err => setStatus("err", "更新中に失敗", err.message || String(err)));
+    }, 10 * 60 * 1000);
+  </script>
+</body>
+</html>
