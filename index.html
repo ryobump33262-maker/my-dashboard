@@ -1,4 +1,4 @@
-<script>
+<style>body{background:#0b0f19;color:#e8eefc;font-family:system-ui}</style>
 const WORKER_BASE = "https://square-union-92c7.ryobump33262.workers.dev";
 const proxy = (u) => `${WORKER_BASE}/proxy?url=${encodeURIComponent(u)}`;
 
@@ -78,4 +78,17 @@ setInterval(() => {
   loadRSS("https://news.google.com/rss/search?q=site:saitama-np.co.jp&hl=ja&gl=JP&ceid=JP:ja", "saitama");
   loadFX();
 }, 10 * 60 * 1000);
+<script>
+window.addEventListener("error", (e) => {
+  document.body.innerHTML = "<pre style='white-space:pre-wrap;padding:12px'>JSエラー:\n" + (e.message || e.error) + "\n\n場所: " + (e.filename||"") + ":" + (e.lineno||"") + "</pre>";
+});
+
+window.addEventListener("unhandledrejection", (e) => {
+  document.body.innerHTML = "<pre style='white-space:pre-wrap;padding:12px'>Promiseエラー:\n" + (e.reason?.message || e.reason) + "</pre>";
+});
+
+document.body.insertAdjacentHTML("afterbegin",
+  "<div style='padding:12px'><h1 style='margin:0 0 8px'>表示テスト</h1><div id='status'>JSは動いてます</div></div>"
+);
 </script>
+
