@@ -3,276 +3,184 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="robots" content="noindex,nofollow" />
-  <title>My Private Dashboard</title>
+  <title>My Simple Dashboard</title>
   <style>
-    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans JP",sans-serif;background:#0b0f19;color:#e8eefc}
-    header{padding:18px 16px;border-bottom:1px solid rgba(255,255,255,.08);position:sticky;top:0;background:#0b0f19;z-index:10}
-    h1{font-size:18px;margin:0}
-    .grid{display:grid;gap:12px;padding:12px;grid-template-columns:repeat(12,1fr)}
-    .card{border:1px solid rgba(255,255,255,.10);background:rgba(255,255,255,.03);border-radius:14px;overflow:hidden}
-    .card h2{font-size:13px;margin:0;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-between;align-items:center;gap:10px}
-    .card h2 small{opacity:.75;font-weight:400}
-    .content{padding:10px 12px}
-    .span6{grid-column:span 6}
-    .span12{grid-column:span 12}
-    .span4{grid-column:span 4}
-    @media (max-width: 980px){ .span6,.span4{grid-column:span 12} }
-    iframe{width:100%;height:420px;border:0}
-    .small iframe{height:320px}
-    a{color:#a9c7ff}
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans JP",sans-serif;background:#fff;color:#111}
+    header{padding:14px 16px;border-bottom:1px solid #e5e7eb;position:sticky;top:0;background:#fff;z-index:10}
+    h1{margin:0;font-size:18px}
+    .wrap{padding:14px 16px;max-width:1100px;margin:0 auto}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    @media (max-width: 900px){.grid{grid-template-columns:1fr}}
+    .card{border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;background:#fff}
+    .card h2{margin:0;padding:10px 12px;font-size:14px;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .card .body{padding:10px 12px}
+    .muted{color:#6b7280;font-size:12px}
     ul{margin:0;padding-left:18px}
-    li{margin:6px 0;line-height:1.45}
-    .muted{opacity:.75}
-    table{width:100%;border-collapse:collapse;font-size:13px}
-    th,td{padding:6px 8px;border-bottom:1px solid rgba(255,255,255,.08);text-align:right}
-    th:first-child, td:first-child{text-align:left}
-    .pill{display:inline-block;padding:2px 8px;border:1px solid rgba(255,255,255,.15);border-radius:999px;font-size:12px}
-    .twoCol{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    @media (max-width: 980px){ .twoCol{grid-template-columns:1fr} }
-    .banner{margin:12px;padding:10px 12px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(255,180,0,.06)}
-    .ok{background:rgba(0,200,120,.08)}
-    .err{background:rgba(255,80,80,.08)}
-    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace}
+    li{margin:6px 0;line-height:1.4}
+    a{color:#2563eb}
+    iframe{width:100%;height:320px;border:0}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    @media (max-width: 900px){.row{grid-template-columns:1fr}}
+    .pill{font-size:12px;border:1px solid #e5e7eb;border-radius:999px;padding:2px 8px;color:#374151}
+    .status{margin-bottom:12px;padding:10px 12px;border:1px solid #e5e7eb;border-radius:12px;background:#f9fafb}
+    .status b{font-weight:700}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;white-space:pre-wrap}
   </style>
 </head>
 <body>
   <header>
-    <h1>My Private Dashboard</h1>
+    <h1>My Simple Dashboard</h1>
   </header>
 
-  <!-- ここにエラーや状態を表示 -->
-  <div id="statusBox" class="banner ok">
-    <div><b>状態</b>：起動しました</div>
-    <div class="muted">もし何か失敗しても、この欄に理由が出ます。</div>
-  </div>
+  <div class="wrap">
+    <div id="status" class="status">
+      <b>状態</b>：読み込み中…
+      <div class="muted">（うまく取れない場合も、ここに理由を出します）</div>
+    </div>
 
-  <main class="grid">
-
-    <!-- 為替（TradingView） -->
-    <section class="card span12">
-      <h2>FX（USDJPY）<small class="muted">TradingView</small></h2>
-      <div class="content">
+    <!-- 金と原油（TradingView） -->
+    <div class="row">
+      <section class="card">
+        <h2>金（Gold） <span class="pill">チャート</span></h2>
         <iframe
-          src="https://s.tradingview.com/widgetembed/?symbol=FX%3AUSDJPY&interval=60&hidesidetoolbar=1&theme=dark&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AGOLD&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
         </iframe>
-      </div>
-    </section>
+      </section>
 
-    <!-- 為替：JPYベース全通貨一覧（Frankfurter） -->
-    <section class="card span12">
-      <h2>円ベース：全通貨レート（参照レート）<small id="fxUpdated" class="muted">更新: -</small></h2>
-      <div class="content">
-        <div class="muted" style="margin-bottom:8px;">出典：Frankfurter（ECB参照レート系）</div>
-        <div style="max-height:420px;overflow:auto;border:1px solid rgba(255,255,255,.08);border-radius:12px;">
-          <table id="fxTable">
-            <thead>
-              <tr><th>通貨</th><th>1 JPY =</th></tr>
-            </thead>
-            <tbody id="fxTbody"></tbody>
-          </table>
-        </div>
-      </div>
-    </section>
+      <section class="card">
+        <h2>原油（WTI） <span class="pill">チャート</span></h2>
+        <iframe
+          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AUSOIL&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+        </iframe>
+      </section>
+    </div>
 
-    <!-- 貴金属 -->
-    <section class="card span6">
-      <h2>Gold（XAUUSD）<small class="muted">TVC:GOLD</small></h2>
-      <div class="content">
-        <iframe src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AGOLD&interval=60&hidesidetoolbar=1&theme=dark&timezone=Asia%2FTokyo&withdateranges=1"></iframe>
-      </div>
-    </section>
-
-    <section class="card span6">
-      <h2>Silver（XAGUSD）<small class="muted">TVC:SILVER</small></h2>
-      <div class="content">
-        <iframe src="https://s.tradingview.com/widgetembed/?symbol=TVC%3ASILVER&interval=60&hidesidetoolbar=1&theme=dark&timezone=Asia%2FTokyo&withdateranges=1"></iframe>
-      </div>
-    </section>
-
-    <!-- コモディティ -->
-    <section class="card span4 small">
-      <h2>Copper（銅）<small class="muted">COMEX:HG1!</small></h2>
-      <div class="content">
-        <iframe src="https://s.tradingview.com/widgetembed/?symbol=COMEX%3AHG1!&interval=240&hidesidetoolbar=1&theme=dark&timezone=Asia%2FTokyo&withdateranges=1"></iframe>
-      </div>
-    </section>
-
-    <section class="card span4 small">
-      <h2>Platinum（プラチナ）<small class="muted">NYMEX:PL1!</small></h2>
-      <div class="content">
-        <iframe src="https://s.tradingview.com/widgetembed/?symbol=NYMEX%3APL1!&interval=240&hidesidetoolbar=1&theme=dark&timezone=Asia%2FTokyo&withdateranges=1"></iframe>
-      </div>
-    </section>
-
-    <section class="card span4 small">
-      <h2>WTI Crude（原油）<small class="muted">TVC:USOIL</small></h2>
-      <div class="content">
-        <iframe src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AUSOIL&interval=240&hidesidetoolbar=1&theme=dark&timezone=Asia%2FTokyo&withdateranges=1"></iframe>
-      </div>
-    </section>
-
-    <section class="card span4 small">
-      <h2>Natural Gas（天然ガス）<small class="muted">NYMEX:NG1!</small></h2>
-      <div class="content">
-        <iframe src="https://s.tradingview.com/widgetembed/?symbol=NYMEX%3ANG1!&interval=240&hidesidetoolbar=1&theme=dark&timezone=Asia%2FTokyo&withdateranges=1"></iframe>
-      </div>
-    </section>
-
-    <section class="card span4 small">
-      <h2>Wheat（小麦）<small class="muted">CBOT:ZW1!</small></h2>
-      <div class="content">
-        <iframe src="https://s.tradingview.com/widgetembed/?symbol=CBOT%3AZW1!&interval=240&hidesidetoolbar=1&theme=dark&timezone=Asia%2FTokyo&withdateranges=1"></iframe>
-      </div>
-    </section>
-
-    <section class="card span4 small">
-      <h2>Corn（とうもろこし）<small class="muted">CBOT:ZC1!</small></h2>
-      <div class="content">
-        <iframe src="https://s.tradingview.com/widgetembed/?symbol=CBOT%3AZC1!&interval=240&hidesidetoolbar=1&theme=dark&timezone=Asia%2FTokyo&withdateranges=1"></iframe>
-      </div>
-    </section>
-
-    <!-- ニュース（RSS見出し） -->
-    <section class="card span12">
-      <h2>ニュース見出し <small class="muted">自動更新</small></h2>
-      <div class="content twoCol">
-        <div>
-          <h3 style="margin:0 0 8px;font-size:14px;">埼玉新聞（見出し）</h3>
-          <div class="muted" style="margin-bottom:8px;">Google News RSSで「saitama-np.co.jp」の記事のみ抽出</div>
+    <!-- ニュース -->
+    <div class="grid" style="margin-top:14px;">
+      <section class="card">
+        <h2>埼玉新聞（見出し） <span class="pill">自動</span></h2>
+        <div class="body">
+          <div class="muted">Google News RSSで「saitama-np.co.jp」の記事だけ拾います。</div>
           <ul id="saitamaList"><li class="muted">読み込み中…</li></ul>
         </div>
-        <div>
-          <h3 style="margin:0 0 8px;font-size:14px;">Yahooニュース（トピックス）</h3>
+      </section>
+
+      <section class="card">
+        <h2>Yahooニュース（見出し） <span class="pill">自動</span></h2>
+        <div class="body">
           <ul id="yahooList"><li class="muted">読み込み中…</li></ul>
         </div>
-      </div>
+      </section>
 
-      <div class="content" style="padding-top:0;">
-        <div class="muted">堤未果さん（X）： <a href="https://x.com/TsutsumiMika" target="_blank" rel="noopener">https://x.com/TsutsumiMika</a></div>
-      </div>
-    </section>
+      <section class="card">
+        <h2>Bloomberg（見出し） <span class="pill">自動</span></h2>
+        <div class="body">
+          <div class="muted">Google News RSSで「Bloombergのドメイン」を拾います（公式RSSが一定しないため）。</div>
+          <ul id="bloombergList"><li class="muted">読み込み中…</li></ul>
+        </div>
+      </section>
 
-  </main>
+      <section class="card">
+        <h2>リンク</h2>
+        <div class="body">
+          <ul>
+            <li><a href="https://x.com/TsutsumiMika" target="_blank" rel="noopener">堤未果さん（X）</a></li>
+          </ul>
+          <div class="muted">※このページは「自分用まとめ」です（noindex推奨）。</div>
+        </div>
+      </section>
+    </div>
+  </div>
 
   <script>
-    // === ここが心臓部 ===
-    const WORKER_BASE = "https://square-union-92c7.ryobump33262.workers.dev";
-    const proxy = (u) => `${WORKER_BASE}/proxy?url=${encodeURIComponent(u)}`;
+    // ---- ここがポイント：無料CORS中継を「複数」試して、取れたやつを採用する ----
+    // どれも無料なので、たまに落ちます。落ちても次へ行く設計にしてあります。
+    const PROXIES = [
+      // allorigins（raw）
+      (u) => "https://api.allorigins.win/raw?url=" + encodeURIComponent(u),
+      // codetabs（※動かない時もある）
+      (u) => "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(u),
+      // (任意) あなたのCloudflare Workerを使うならここに追加できる：
+      // (u) => "https://square-union-92c7.ryobump33262.workers.dev/proxy?url=" + encodeURIComponent(u),
+    ];
 
-    const statusBox = document.getElementById("statusBox");
-    function setStatus(kind, title, detail){
-      statusBox.className = "banner " + (kind === "err" ? "err" : "ok");
-      statusBox.innerHTML = `
-        <div><b>${title}</b></div>
-        <div class="muted mono">${detail || ""}</div>
-      `;
+    const statusEl = document.getElementById("status");
+    function setStatus(title, detail){
+      statusEl.innerHTML = "<b>" + title + "</b><div class='muted mono'>" + (detail || "") + "</div>";
     }
 
-    // 真っ白防止：エラーは全部画面上に出す
-    window.addEventListener("error", (e) => {
-      setStatus("err", "JSエラーが発生", `${e.message}\n${e.filename||""}:${e.lineno||""}`);
-    });
-    window.addEventListener("unhandledrejection", (e) => {
-      setStatus("err", "通信エラー/Promiseエラー", `${e.reason?.message || e.reason}`);
-    });
+    async function fetchViaProxies(url){
+      let lastErr = "";
+      for (const p of PROXIES){
+        try{
+          const res = await fetch(p(url), { cache: "no-store" });
+          if(!res.ok) throw new Error("HTTP " + res.status);
+          return await res.text();
+        }catch(e){
+          lastErr = String(e);
+        }
+      }
+      throw new Error("どの中継でも取得できませんでした: " + lastErr);
+    }
 
-    // RSSパース
-    function parseRss(xmlText) {
+    function parseRss(xmlText){
       const xml = new DOMParser().parseFromString(xmlText, "text/xml");
-      return Array.from(xml.querySelectorAll("item")).slice(0, 12).map(it => ({
+      const items = Array.from(xml.querySelectorAll("item")).slice(0, 10);
+      return items.map(it => ({
         title: (it.querySelector("title")?.textContent || "").trim(),
-        link: (it.querySelector("link")?.textContent || "").trim(),
-        pubDate: (it.querySelector("pubDate")?.textContent || "").trim(),
+        link: (it.querySelector("link")?.textContent || "").trim()
       })).filter(x => x.title && x.link);
     }
 
-    async function loadHeadlines(rssUrl, ulId) {
-      const ul = document.getElementById(ulId);
-      if (!ul) throw new Error(`要素が見つかりません: #${ulId}`);
-      ul.innerHTML = `<li class="muted">読み込み中…</li>`;
-
-      const res = await fetch(proxy(rssUrl));
-      if (!res.ok) throw new Error(`RSS取得失敗: HTTP ${res.status}`);
-
-      const xmlText = await res.text();
+    async function loadRssToList(rssUrl, listId){
+      const ul = document.getElementById(listId);
+      ul.innerHTML = "<li class='muted'>読み込み中…</li>";
+      const xmlText = await fetchViaProxies(rssUrl);
       const items = parseRss(xmlText);
 
       ul.innerHTML = "";
-      for (const it of items) {
+      for(const it of items){
         const li = document.createElement("li");
         const a = document.createElement("a");
         a.href = it.link;
+        a.textContent = it.title;
         a.target = "_blank";
         a.rel = "noopener";
-        a.textContent = it.title;
         li.appendChild(a);
         ul.appendChild(li);
       }
-
-      if (!items.length) {
-        ul.innerHTML = `<li class="muted">見出しが見つかりませんでした。</li>`;
+      if(items.length === 0){
+        ul.innerHTML = "<li class='muted'>見出しが見つかりませんでした。</li>";
       }
     }
 
-    async function loadFxTable() {
-      const updatedEl = document.getElementById("fxUpdated");
-      const tbody = document.getElementById("fxTbody");
-      if (!updatedEl || !tbody) throw new Error("為替テーブル要素が見つかりません");
+    async function main(){
+      try{
+        setStatus("状態：読み込み中…", "ニュース見出しを取得しています。");
 
-      tbody.innerHTML = `<tr><td class="muted">読み込み中…</td><td></td></tr>`;
+        // Yahoo RSS（公式トピックス）
+        const YAHOO = "https://news.yahoo.co.jp/rss/topics/top-picks.xml";
 
-      const currenciesUrl = "https://api.frankfurter.dev/v1/currencies";
-      const latestUrl = "https://api.frankfurter.dev/v1/latest?base=JPY";
+        // 埼玉新聞：Google News RSSで site:saitama-np.co.jp を抽出
+        const SAITAMA = "https://news.google.com/rss/search?q=site:saitama-np.co.jp&hl=ja&gl=JP&ceid=JP:ja";
 
-      // Worker経由で取得（CORS回避）
-      const [curRes, rateRes] = await Promise.all([fetch(proxy(currenciesUrl)), fetch(proxy(latestUrl))]);
-      if (!curRes.ok) throw new Error(`通貨一覧取得失敗: HTTP ${curRes.status}`);
-      if (!rateRes.ok) throw new Error(`レート取得失敗: HTTP ${rateRes.status}`);
+        // Bloomberg：Google News RSSで bloomberg の記事を抽出（JP優先）
+        const BLOOMBERG = "https://news.google.com/rss/search?q=site:bloomberg.co.jp%20OR%20site:bloomberg.com&hl=ja&gl=JP&ceid=JP:ja";
 
-      const currencies = await curRes.json();
-      const data = await rateRes.json();
+        await Promise.all([
+          loadRssToList(SAITAMA, "saitamaList"),
+          loadRssToList(YAHOO, "yahooList"),
+          loadRssToList(BLOOMBERG, "bloombergList"),
+        ]);
 
-      updatedEl.textContent = `更新: ${data.date}（基準レート）`;
-
-      const rows = Object.entries(data.rates)
-        .map(([code, rate]) => ({ code, name: currencies[code] || "", rate }))
-        .sort((a,b) => a.code.localeCompare(b.code));
-
-      tbody.innerHTML = "";
-      for (const r of rows) {
-        const tr = document.createElement("tr");
-        const td1 = document.createElement("td");
-        td1.textContent = `${r.code}${r.name ? " — " + r.name : ""}`;
-        const td2 = document.createElement("td");
-        td2.textContent = Number(r.rate).toFixed(6);
-        tr.appendChild(td1);
-        tr.appendChild(td2);
-        tbody.appendChild(tr);
+        setStatus("状態：OK", "表示に成功しました。うまく出ない枠があれば、その枠だけ対策します。");
+      }catch(e){
+        setStatus("状態：通信エラー", String(e));
       }
-    }
-
-    async function main() {
-      setStatus("ok", "状態：読み込み中", "ニュースと為替を取得しています…");
-
-      // ニュース
-      await Promise.all([
-        loadHeadlines("https://news.yahoo.co.jp/rss/topics/top-picks.xml", "yahooList"),
-        loadHeadlines("https://news.google.com/rss/search?q=site:saitama-np.co.jp&hl=ja&gl=JP&ceid=JP:ja", "saitamaList"),
-      ]);
-
-      // 為替表
-      await loadFxTable();
-
-      setStatus("ok", "状態：OK", "ニュース・為替の表示に成功しました。");
     }
 
     main();
-
-    // 自動更新（10分）
-    setInterval(() => {
-      main().catch(err => setStatus("err", "更新中に失敗", err.message || String(err)));
-    }, 10 * 60 * 1000);
+    setInterval(main, 10 * 60 * 1000); // 10分おきに更新
   </script>
 </body>
 </html>
