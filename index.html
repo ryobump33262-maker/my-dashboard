@@ -28,7 +28,6 @@
     details{margin-top:8px}
     summary{cursor:pointer;color:#374151;font-size:12px}
     .hint{font-size:12px;color:#374151;background:#fff7ed;border:1px solid #fed7aa;padding:8px 10px;border-radius:10px}
-    .small{font-size:12px;color:#374151}
   </style>
 </head>
 <body>
@@ -139,7 +138,7 @@
       <section class="card">
         <h2>Yahoo（橋本淳司さん） <span class="pill">自動</span></h2>
         <div class="body">
-          <div class="muted">Yahoo直取得は不安定なので、Google News RSS検索（Yahooドメイン + 橋本淳司）で拾います。</div>
+          <div class="muted">Yahoo直取得は不安定なので、Google News RSS検索（Yahoo + 橋本淳司）で拾います。</div>
           <ul id="ywaterList"><li class="muted">読み込み中…</li></ul>
           <details>
             <summary>詳細</summary>
@@ -148,7 +147,26 @@
         </div>
       </section>
 
-
+      <section class="card">
+        <h2>価格.com（米・水） <span class="pill">リンク</span></h2>
+        <div class="body">
+          <ul>
+            <li>
+              <a href="https://search.kakaku.com/-/?category=0028" target="_blank" rel="noopener">
+                お米（価格.com検索）
+              </a>
+            </li>
+            <li>
+              <a href="https://search.kakaku.com/-/?category=0016" target="_blank" rel="noopener">
+                ミネラルウォーター（価格.com検索）
+              </a>
+            </li>
+          </ul>
+          <div class="hint" style="margin-top:10px;">
+            価格.comは自動取得が壊れやすいので、リンク先を定点観測する方式に変更しました。
+          </div>
+        </div>
+      </section>
 
       <section class="card">
         <h2>リンク</h2>
@@ -159,7 +177,7 @@
           </ul>
           <div class="hint">
             ニュースが「見つかりませんでした」になるときは、だいたい <b>CORS中継がブロック/不調</b> です。<br>
-            Worker中継が死んだ時は、カードの「詳細」を開いて、どの中継が返してるか確認できます。
+            Worker中継が死んだ時は、カードの「詳細」でどの中継が返してるか確認できます。
           </div>
         </div>
       </section>
@@ -168,7 +186,6 @@
 
   <script>
     // ========= 無料CORS中継（落ちても次を試す） =========
-    // ※ 先頭にCloudflare Workerを置くのが安定
     const PROXIES = [
       (u) => "https://square-union-92c7.ryobump33262.workers.dev/proxy?url=" + encodeURIComponent(u),
       (u) => "https://api.allorigins.win/raw?url=" + encodeURIComponent(u),
@@ -235,7 +252,6 @@
 
       const { text, used } = await fetchViaProxies(rssUrl);
 
-      // デバッグ情報（どの中継を使ったか / 先頭の一部）
       const head = text.slice(0, 400).replaceAll("\r", "");
       dbg.textContent = "取得URL:\n" + rssUrl + "\n\n中継:\n" + used + "\n\n先頭400文字:\n" + head;
 
@@ -333,46 +349,20 @@
       }
     }
 
-  
-    }
-
-    function formatPct(now, prev){
-      if(!prev || prev <= 0) return "";
-      const pct = (now - prev) / prev * 100;
-      const sign = pct >= 0 ? "+" : "";
-      return `（${sign}${pct.toFixed(1)}%）`;
-    }
-
-    async function loadKakakuMonitor(riceUrl, waterUrl){
-      const dbg = document.getElementById("kakakuDebug");
-      const s = document.getElementById("kakakuStatus");
-      const timeEl = document.getElementById("kakakuTime");
-
-      document.getElementById("kakakuRiceLink").href = riceUrl;
-      document.getElementById("kakakuWaterLink").href = waterUrl;
-
-      dbg.textContent = "";
-      s.textContent = "取得中…";
-
-
     async function main(){
       try{
-        setStatus("状態：読み込み中…", "ニュース見出し＆価格監視を取得しています。");
+        setStatus("状態：読み込み中…", "ニュース見出しを取得しています。");
 
-        // 既存
         const YAHOO_TOP = "https://news.yahoo.co.jp/rss/topics/top-picks.xml";
         const SAITAMA = "https://news.google.com/rss/search?q=site:saitama-np.co.jp&hl=ja&gl=JP&ceid=JP:ja";
         const BLOOMBERG = "https://news.google.com/rss/search?q=site:bloomberg.co.jp%20OR%20site:bloomberg.com&hl=ja&gl=JP&ceid=JP:ja";
 
-        // 追加
         const BLOOMBERG_US = "https://feeds.bloomberg.com/markets/news.rss";
         const GMR = "https://www.globalmacroresearch.org/jp/feed";
 
-        // Yahoo（橋本淳司さん）：Google News RSS検索でYahooドメインの記事を拾う
+        // Yahoo（水ジャーナリスト：橋本淳司さん）
         const YAHOO_HASHIMOTO =
           "https://news.google.com/rss/search?q=site:news.yahoo.co.jp%20%E6%A9%8B%E6%9C%AC%E6%B7%B3%E5%8F%B8&hl=ja&gl=JP&ceid=JP:ja";
-
-    
 
         await Promise.all([
           loadFeed(SAITAMA, "saitamaList", "saitamaDebug"),
@@ -383,9 +373,6 @@
           loadFeed(GMR, "gmrList", "gmrDebug"),
           loadFeed(YAHOO_HASHIMOTO, "ywaterList", "ywaterDebug"),
         ]);
-
-        // 価格.comはHTMLが重いこともあるので最後に
-        await loadKakakuMonitor(KAKAKU_RICE, KAKAKU_WATER);
 
         setStatus("状態：OK", "表示できました。特定枠だけダメなら、その枠の「詳細」で原因が見えます。");
       }catch(e){
