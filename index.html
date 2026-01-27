@@ -28,6 +28,7 @@
     details{margin-top:8px}
     summary{cursor:pointer;color:#374151;font-size:12px}
     .hint{font-size:12px;color:#374151;background:#fff7ed;border:1px solid #fed7aa;padding:8px 10px;border-radius:10px}
+    .small{font-size:12px;color:#374151}
   </style>
 </head>
 <body>
@@ -38,7 +39,7 @@
   <div class="wrap">
     <div id="status" class="status">
       <b>状態</b>：読み込み中…
-      <div class="muted">（ニュースが出ない時は、下の「詳細」を開くと原因が見えます）</div>
+      <div class="muted">（ニュースが出ない時は、各カードの「詳細」を開くと原因が見えます）</div>
     </div>
 
     <!-- 金と原油（TradingView） -->
@@ -58,6 +59,23 @@
       </section>
     </div>
 
+    <!-- 為替（TradingView） -->
+    <div class="row" style="margin-top:14px;">
+      <section class="card">
+        <h2>ドル円（USD/JPY） <span class="pill">チャート</span></h2>
+        <iframe
+          src="https://s.tradingview.com/widgetembed/?symbol=FX%3AUSDJPY&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+        </iframe>
+      </section>
+
+      <section class="card">
+        <h2>ユーロ円（EUR/JPY） <span class="pill">チャート</span></h2>
+        <iframe
+          src="https://s.tradingview.com/widgetembed/?symbol=FX%3AEURJPY&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+        </iframe>
+      </section>
+    </div>
+
     <!-- ニュース -->
     <div class="grid" style="margin-top:14px;">
       <section class="card">
@@ -73,7 +91,7 @@
       </section>
 
       <section class="card">
-        <h2>Yahooニュース（見出し） <span class="pill">自動</span></h2>
+        <h2>Yahooニュース（トピックス） <span class="pill">自動</span></h2>
         <div class="body">
           <ul id="yahooList"><li class="muted">読み込み中…</li></ul>
           <details>
@@ -84,7 +102,7 @@
       </section>
 
       <section class="card">
-        <h2>Bloomberg（見出し） <span class="pill">自動</span></h2>
+        <h2>Bloomberg（JP/混在） <span class="pill">自動</span></h2>
         <div class="body">
           <div class="muted">Google News RSSで「Bloombergのドメイン」を拾います。</div>
           <ul id="bloombergList"><li class="muted">読み込み中…</li></ul>
@@ -96,15 +114,69 @@
       </section>
 
       <section class="card">
+        <h2>Bloomberg US（見出し・日本語） <span class="pill">翻訳</span></h2>
+        <div class="body">
+          <div class="muted">Bloomberg US RSS（英語）を取得してタイトルだけ日本語化します（翻訳失敗時は英語のまま）。</div>
+          <ul id="bbusList"><li class="muted">読み込み中…</li></ul>
+          <details>
+            <summary>詳細（うまく出ない時）</summary>
+            <div id="bbusDebug" class="muted mono"></div>
+          </details>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Global Macro Research（更新） <span class="pill">RSS</span></h2>
+        <div class="body">
+          <ul id="gmrList"><li class="muted">読み込み中…</li></ul>
+          <details>
+            <summary>詳細</summary>
+            <div id="gmrDebug" class="muted mono"></div>
+          </details>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Yahoo（橋本淳司さん） <span class="pill">自動</span></h2>
+        <div class="body">
+          <div class="muted">Yahoo直取得は不安定なので、Google News RSS検索（Yahooドメイン + 橋本淳司）で拾います。</div>
+          <ul id="ywaterList"><li class="muted">読み込み中…</li></ul>
+          <details>
+            <summary>詳細</summary>
+            <div id="ywaterDebug" class="muted mono"></div>
+          </details>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>価格.com（米・水）値上がり率 <span class="pill">試作</span></h2>
+        <div class="body">
+          <div id="kakakuStatus" class="muted">読み込み中…</div>
+          <ul>
+            <li><a id="kakakuRiceLink" href="#" target="_blank" rel="noopener">お米（ページ）</a>：<span id="kakakuRice"></span></li>
+            <li><a id="kakakuWaterLink" href="#" target="_blank" rel="noopener">お水（ページ）</a>：<span id="kakakuWater"></span></li>
+          </ul>
+          <div class="small muted" id="kakakuTime"></div>
+          <details>
+            <summary>詳細（取得した先頭HTMLなど）</summary>
+            <div id="kakakuDebug" class="muted mono"></div>
+          </details>
+          <div class="hint" style="margin-top:10px;">
+            ※価格.comのHTML構造が変わると抽出がズレます。ズレたら「詳細」の先頭HTMLを貼ってくれれば即修正します。
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
         <h2>リンク</h2>
         <div class="body">
           <ul>
             <li><a href="https://x.com/TsutsumiMika" target="_blank" rel="noopener">堤未果さん（X）</a></li>
+            <li><a href="https://www.globalmacroresearch.org/jp/" target="_blank" rel="noopener">Global Macro Research</a></li>
           </ul>
           <div class="hint">
-            ニュースが「見つかりませんでした」になるときは、<br>
-            だいたい <b>CORS中継がブロック/不調</b> です。<br>
-            その場合、Cloudflare Workerを「中継」にすると安定します（希望あれば案内するよ）。
+            ニュースが「見つかりませんでした」になるときは、だいたい <b>CORS中継がブロック/不調</b> です。<br>
+            Worker中継が死んだ時は、カードの「詳細」を開いて、どの中継が返してるか確認できます。
           </div>
         </div>
       </section>
@@ -113,14 +185,12 @@
 
   <script>
     // ========= 無料CORS中継（落ちても次を試す） =========
-    // ※ あなたのCloudflare Workerを“/proxy”対応で持っているなら、ここを先頭に入れると最強：
-    // (u) => "https://あなたのworker.workers.dev/proxy?url=" + encodeURIComponent(u),
+    // ※ 先頭にCloudflare Workerを置くのが安定
     const PROXIES = [
-  (u) => "https://square-union-92c7.ryobump33262.workers.dev/proxy?url=" + encodeURIComponent(u),
-  (u) => "https://api.allorigins.win/raw?url=" + encodeURIComponent(u),
-  (u) => "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(u),
-];
-
+      (u) => "https://square-union-92c7.ryobump33262.workers.dev/proxy?url=" + encodeURIComponent(u),
+      (u) => "https://api.allorigins.win/raw?url=" + encodeURIComponent(u),
+      (u) => "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(u),
+    ];
 
     const statusEl = document.getElementById("status");
     function setStatus(title, detail){
@@ -210,21 +280,170 @@
       }
     }
 
+    // ========= 英→日 翻訳（無料API：失敗時は英語のまま） =========
+    async function translateEnToJa(text){
+      const key = "tr_enja_" + text;
+      const cached = sessionStorage.getItem(key);
+      if (cached) return cached;
+
+      const apiUrl = "https://api.mymemory.translated.net/get?q=" + encodeURIComponent(text) + "&langpair=en|ja";
+      try{
+        const res = await fetch(apiUrl, { cache: "no-store" });
+        if(!res.ok) throw new Error("HTTP " + res.status);
+        const json = await res.json();
+        const out = (json?.responseData?.translatedText || "").trim();
+        const finalText = out || text;
+        sessionStorage.setItem(key, finalText);
+        return finalText;
+      }catch(e){
+        // 直fetchがCORS等で落ちたら中継も試す
+        try{
+          const { text: j } = await fetchViaProxies(apiUrl);
+          const json = JSON.parse(j);
+          const out = (json?.responseData?.translatedText || "").trim();
+          const finalText = out || text;
+          sessionStorage.setItem(key, finalText);
+          return finalText;
+        }catch(_){
+          return text;
+        }
+      }
+    }
+
+    async function loadFeedTranslated(rssUrl, listId, debugId){
+      const ul = document.getElementById(listId);
+      const dbg = document.getElementById(debugId);
+      ul.innerHTML = "<li class='muted'>読み込み中…</li>";
+      dbg.textContent = "";
+
+      const { text, used } = await fetchViaProxies(rssUrl);
+      const head = text.slice(0, 400).replaceAll("\r", "");
+      dbg.textContent = "取得URL:\n" + rssUrl + "\n\n中継:\n" + used + "\n\n先頭400文字:\n" + head;
+
+      if (!looksLikeFeed(text)){
+        ul.innerHTML = "<li class='muted'>RSSではない内容が返りました（ブロック/制限の可能性）。</li>";
+        return;
+      }
+
+      const items = parseFeed(text);
+      ul.innerHTML = "";
+
+      // 翻訳回数を抑えるため最大8件
+      const sliced = items.slice(0, 8);
+
+      for (const it of sliced){
+        let titleJa = it.title;
+        try{ titleJa = await translateEnToJa(it.title); }catch(e){ titleJa = it.title; }
+
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.href = it.link;
+        a.textContent = titleJa;
+        a.target = "_blank";
+        a.rel = "noopener";
+        li.appendChild(a);
+        ul.appendChild(li);
+      }
+
+      if(sliced.length === 0){
+        ul.innerHTML = "<li class='muted'>見出しが見つかりませんでした。</li>";
+      }
+    }
+
+    // ========= 価格.com（米/水）簡易モニター =========
+    function extractFirstYenPrice(html){
+      // とにかく「¥数字」を最初に拾う（壊れにくいが、意図と違う価格を拾う可能性あり）
+      const m = html.match(/¥\s*([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)/);
+      if(!m) return null;
+      return Number(m[1].replaceAll(",", ""));
+    }
+
+    function formatPct(now, prev){
+      if(!prev || prev <= 0) return "";
+      const pct = (now - prev) / prev * 100;
+      const sign = pct >= 0 ? "+" : "";
+      return `（${sign}${pct.toFixed(1)}%）`;
+    }
+
+    async function loadKakakuMonitor(riceUrl, waterUrl){
+      const dbg = document.getElementById("kakakuDebug");
+      const s = document.getElementById("kakakuStatus");
+      const riceEl = document.getElementById("kakakuRice");
+      const waterEl = document.getElementById("kakakuWater");
+      const timeEl = document.getElementById("kakakuTime");
+
+      document.getElementById("kakakuRiceLink").href = riceUrl;
+      document.getElementById("kakakuWaterLink").href = waterUrl;
+
+      dbg.textContent = "";
+      s.textContent = "取得中…";
+
+      const r = await fetchViaProxies(riceUrl);
+      const w = await fetchViaProxies(waterUrl);
+
+      const ricePrice = extractFirstYenPrice(r.text);
+      const waterPrice = extractFirstYenPrice(w.text);
+
+      dbg.textContent =
+        "【米】中継:\n" + r.used + "\n先頭250:\n" + r.text.slice(0,250).replaceAll("\r","") + "\n\n" +
+        "【水】中継:\n" + w.used + "\n先頭250:\n" + w.text.slice(0,250).replaceAll("\r","");
+
+      const prevRice = Number(localStorage.getItem("kakaku_rice_prev") || "0");
+      const prevWater = Number(localStorage.getItem("kakaku_water_prev") || "0");
+
+      if (ricePrice){
+        riceEl.textContent = "¥" + ricePrice.toLocaleString() + " " + formatPct(ricePrice, prevRice);
+        localStorage.setItem("kakaku_rice_prev", String(ricePrice));
+      } else {
+        riceEl.textContent = "取得失敗（抽出ルール調整が必要）";
+      }
+
+      if (waterPrice){
+        waterEl.textContent = "¥" + waterPrice.toLocaleString() + " " + formatPct(waterPrice, prevWater);
+        localStorage.setItem("kakaku_water_prev", String(waterPrice));
+      } else {
+        waterEl.textContent = "取得失敗（抽出ルール調整が必要）";
+      }
+
+      timeEl.textContent = "更新: " + new Date().toLocaleString("ja-JP");
+      s.textContent = "OK（前回値との比較）";
+    }
+
     async function main(){
       try{
-        setStatus("状態：読み込み中…", "ニュース見出しを取得しています。");
+        setStatus("状態：読み込み中…", "ニュース見出し＆価格監視を取得しています。");
 
-        const YAHOO = "https://news.yahoo.co.jp/rss/topics/top-picks.xml";
+        // 既存
+        const YAHOO_TOP = "https://news.yahoo.co.jp/rss/topics/top-picks.xml";
         const SAITAMA = "https://news.google.com/rss/search?q=site:saitama-np.co.jp&hl=ja&gl=JP&ceid=JP:ja";
         const BLOOMBERG = "https://news.google.com/rss/search?q=site:bloomberg.co.jp%20OR%20site:bloomberg.com&hl=ja&gl=JP&ceid=JP:ja";
 
+        // 追加
+        const BLOOMBERG_US = "https://feeds.bloomberg.com/markets/news.rss";
+        const GMR = "https://www.globalmacroresearch.org/jp/rss-2";
+
+        // Yahoo（橋本淳司さん）：Google News RSS検索でYahooドメインの記事を拾う
+        const YAHOO_HASHIMOTO =
+          "https://news.google.com/rss/search?q=site:news.yahoo.co.jp%20%E6%A9%8B%E6%9C%AC%E6%B7%B3%E5%8F%B8&hl=ja&gl=JP&ceid=JP:ja";
+
+        // 価格.com（カテゴリページ）
+        const KAKAKU_RICE = "https://kakaku.com/food/ss_0028_0008/";
+        const KAKAKU_WATER = "https://kakaku.com/drink/ss_0016_0062/0002/";
+
         await Promise.all([
           loadFeed(SAITAMA, "saitamaList", "saitamaDebug"),
-          loadFeed(YAHOO, "yahooList", "yahooDebug"),
+          loadFeed(YAHOO_TOP, "yahooList", "yahooDebug"),
           loadFeed(BLOOMBERG, "bloombergList", "bloombergDebug"),
+
+          loadFeedTranslated(BLOOMBERG_US, "bbusList", "bbusDebug"),
+          loadFeed(GMR, "gmrList", "gmrDebug"),
+          loadFeed(YAHOO_HASHIMOTO, "ywaterList", "ywaterDebug"),
         ]);
 
-        setStatus("状態：OK", "表示できました。もし特定枠だけダメなら、その枠の「詳細」を見て原因を特定できます。");
+        // 価格.comはHTMLが重いこともあるので最後に
+        await loadKakakuMonitor(KAKAKU_RICE, KAKAKU_WATER);
+
+        setStatus("状態：OK", "表示できました。特定枠だけダメなら、その枠の「詳細」で原因が見えます。");
       }catch(e){
         setStatus("状態：通信エラー", String(e));
       }
