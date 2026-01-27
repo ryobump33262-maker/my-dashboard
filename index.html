@@ -148,27 +148,7 @@
         </div>
       </section>
 
-      <section class="card">
-  <h2>価格.com（米・水） <span class="pill">リンク</span></h2>
-  <div class="body">
-    <ul>
-      <li>
-        <a href="https://search.kakaku.com/-/?category=0028" target="_blank" rel="noopener">
-          お米（価格.com検索）
-        </a>
-      </li>
-      <li>
-        <a href="https://search.kakaku.com/-/?category=0016" target="_blank" rel="noopener">
-          ミネラルウォーター（価格.com検索）
-        </a>
-      </li>
-    </ul>
-    <div class="hint">
-      価格.comは自動取得がほぼ不可能なので、<br>
-      このリンク先を「実質の物価指数」として定点観測する用です。
-    </div>
-  </div>
-</section>
+
 
       <section class="card">
         <h2>リンク</h2>
@@ -353,12 +333,7 @@
       }
     }
 
-    // ========= 価格.com（米/水）簡易モニター =========
-    function extractFirstYenPrice(html){
-      // とにかく「¥数字」を最初に拾う（壊れにくいが、意図と違う価格を拾う可能性あり）
-      const m = html.match(/¥\s*([0-9]{1,3}(?:,[0-9]{3})*|[0-9]+)/);
-      if(!m) return null;
-      return Number(m[1].replaceAll(",", ""));
+  
     }
 
     function formatPct(now, prev){
@@ -371,8 +346,6 @@
     async function loadKakakuMonitor(riceUrl, waterUrl){
       const dbg = document.getElementById("kakakuDebug");
       const s = document.getElementById("kakakuStatus");
-      const riceEl = document.getElementById("kakakuRice");
-      const waterEl = document.getElementById("kakakuWater");
       const timeEl = document.getElementById("kakakuTime");
 
       document.getElementById("kakakuRiceLink").href = riceUrl;
@@ -381,36 +354,6 @@
       dbg.textContent = "";
       s.textContent = "取得中…";
 
-      const r = await fetchViaProxies(riceUrl);
-      const w = await fetchViaProxies(waterUrl);
-
-      const ricePrice = extractFirstYenPrice(r.text);
-      const waterPrice = extractFirstYenPrice(w.text);
-
-      dbg.textContent =
-        "【米】中継:\n" + r.used + "\n先頭250:\n" + r.text.slice(0,250).replaceAll("\r","") + "\n\n" +
-        "【水】中継:\n" + w.used + "\n先頭250:\n" + w.text.slice(0,250).replaceAll("\r","");
-
-      const prevRice = Number(localStorage.getItem("kakaku_rice_prev") || "0");
-      const prevWater = Number(localStorage.getItem("kakaku_water_prev") || "0");
-
-      if (ricePrice){
-        riceEl.textContent = "¥" + ricePrice.toLocaleString() + " " + formatPct(ricePrice, prevRice);
-        localStorage.setItem("kakaku_rice_prev", String(ricePrice));
-      } else {
-        riceEl.textContent = "取得失敗（抽出ルール調整が必要）";
-      }
-
-      if (waterPrice){
-        waterEl.textContent = "¥" + waterPrice.toLocaleString() + " " + formatPct(waterPrice, prevWater);
-        localStorage.setItem("kakaku_water_prev", String(waterPrice));
-      } else {
-        waterEl.textContent = "取得失敗（抽出ルール調整が必要）";
-      }
-
-      timeEl.textContent = "更新: " + new Date().toLocaleString("ja-JP");
-      s.textContent = "OK（前回値との比較）";
-    }
 
     async function main(){
       try{
@@ -429,9 +372,7 @@
         const YAHOO_HASHIMOTO =
           "https://news.google.com/rss/search?q=site:news.yahoo.co.jp%20%E6%A9%8B%E6%9C%AC%E6%B7%B3%E5%8F%B8&hl=ja&gl=JP&ceid=JP:ja";
 
-        // 価格.com（カテゴリページ）
-        const KAKAKU_RICE = "https://kakaku.com/food/ss_0028_0008/";
-        const KAKAKU_WATER = "https://kakaku.com/drink/ss_0016_0062/0002/";
+    
 
         await Promise.all([
           loadFeed(SAITAMA, "saitamaList", "saitamaDebug"),
