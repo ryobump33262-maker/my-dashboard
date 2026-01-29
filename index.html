@@ -1,61 +1,455 @@
 <!doctype html>
 <html lang="ja">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>My Simple Dashboard</title>
-<meta name="robots" content="noindex,nofollow" />
-<style>
-body{margin:0;font-family:system-ui;background:#fff;color:#111}
-header{padding:14px 16px;border-bottom:1px solid #e5e7eb;position:sticky;top:0;background:#fff}
-h1{margin:0;font-size:18px}
-h3{margin:18px 0 10px;font-size:14px}
-.wrap{padding:14px 16px;max-width:1100px;margin:auto}
-.row,.grid{display:grid;gap:14px}
-.row{grid-template-columns:1fr 1fr}
-.grid{grid-template-columns:1fr 1fr}
-@media(max-width:900px){.row,.grid{grid-template-columns:1fr}}
-.card{border:1px solid #e5e7eb;border-radius:12px;background:#fff;overflow:hidden}
-.card h2{margin:0;padding:10px 12px;font-size:14px;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between}
-iframe{width:100%;height:320px;border:0}
-.pill{font-size:12px;border:1px solid #e5e7eb;border-radius:999px;padding:2px 8px;color:#374151}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>My Simple Dashboard</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <style>
+    body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans JP",sans-serif;background:#fff;color:#111}
+    header{padding:14px 16px;border-bottom:1px solid #e5e7eb;position:sticky;top:0;background:#fff;z-index:10}
+    h1{margin:0;font-size:18px}
+    h3{margin:18px 0 10px;font-size:14px;color:#111}
+    .wrap{padding:14px 16px;max-width:1100px;margin:0 auto}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    @media (max-width: 900px){.grid{grid-template-columns:1fr}}
+    .card{border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;background:#fff}
+    .card h2{margin:0;padding:10px 12px;font-size:14px;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;gap:10px}
+    .card .body{padding:10px 12px}
+    .muted{color:#6b7280;font-size:12px}
+    ul{margin:0;padding-left:18px}
+    li{margin:6px 0;line-height:1.4}
+    a{color:#2563eb}
+    iframe{width:100%;height:320px;border:0}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    @media (max-width: 900px){.row{grid-template-columns:1fr}}
+    .pill{font-size:12px;border:1px solid #e5e7eb;border-radius:999px;padding:2px 8px;color:#374151}
+    .status{margin-bottom:12px;padding:10px 12px;border:1px solid #e5e7eb;border-radius:12px;background:#f9fafb}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;white-space:pre-wrap}
+    details{margin-top:8px}
+    summary{cursor:pointer;color:#374151;font-size:12px}
+    .hint{font-size:12px;color:#374151;background:#fff7ed;border:1px solid #fed7aa;padding:8px 10px;border-radius:10px}
+  </style>
 </head>
-
 <body>
-<header><h1>My Simple Dashboard</h1></header>
-<div class="wrap">
+  <header>
+    <h1>My Simple Dashboard</h1>
+  </header>
 
-<h3>国債利回り（米国）</h3>
-<div class="grid">
-<div class="card"><h2>米国2年 <span class="pill">FRED</span></h2>
-<iframe src="https://s.tradingview.com/widgetembed/?symbol=FRED%3ADGS2&interval=60"></iframe></div>
+  <div class="wrap">
+    <div id="status" class="status">
+      <b>状態</b>：読み込み中…
+      <div class="muted">（ニュースが出ない時は、各カードの「詳細」を開くと原因が見えます）</div>
+    </div>
 
-<div class="card"><h2>米国5年 <span class="pill">FRED</span></h2>
-<iframe src="https://s.tradingview.com/widgetembed/?symbol=FRED%3ADGS5&interval=60"></iframe></div>
+    <!-- コモディティ -->
+    <h3>コモディティ</h3>
+    <div class="row">
+      <section class="card">
+        <h2>金（Gold） <span class="pill">チャート</span></h2>
+        <iframe
+          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AGOLD&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+        </iframe>
+      </section>
 
-<div class="card"><h2>米国10年 <span class="pill">FRED</span></h2>
-<iframe src="https://s.tradingview.com/widgetembed/?symbol=FRED%3ADGS10&interval=60"></iframe></div>
+      <section class="card">
+        <h2>銀（Silver） <span class="pill">チャート</span></h2>
+        <iframe
+          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3ASILVER&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+        </iframe>
+      </section>
+    </div>
 
-<div class="card"><h2>米国30年 <span class="pill">FRED</span></h2>
-<iframe src="https://s.tradingview.com/widgetembed/?symbol=FRED%3ADGS30&interval=60"></iframe></div>
-</div>
+    <div class="row" style="margin-top:14px;">
+      <section class="card">
+        <h2>原油（WTI） <span class="pill">チャート</span></h2>
+        <iframe
+          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AUSOIL&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+        </iframe>
+      </section>
 
-<h3>国債利回り（日本）</h3>
-<div class="grid">
-<div class="card"><h2>日本2年 <span class="pill">TVC</span></h2>
-<iframe src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AJPT2Y&interval=60"></iframe></div>
+      <section class="card">
+        <h2>（予備） <span class="pill">空</span></h2>
+        <div class="body">
+          <div class="muted">将来追加用（例：銅、天然ガス、DXY、S&P500など）。</div>
+        </div>
+      </section>
+    </div>
 
-<div class="card"><h2>日本5年 <span class="pill">TVC</span></h2>
-<iframe src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AJPT5Y&interval=60"></iframe></div>
+    <!-- 為替 -->
+    <h3>為替</h3>
+    <div class="row">
+      <section class="card">
+        <h2>ドル円（USD/JPY） <span class="pill">チャート</span></h2>
+        <iframe
+          src="https://s.tradingview.com/widgetembed/?symbol=FX%3AUSDJPY&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+        </iframe>
+      </section>
 
-<div class="card"><h2>日本10年 <span class="pill">TVC</span></h2>
-<iframe src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AJPT10Y&interval=60"></iframe></div>
+      <section class="card">
+        <h2>ユーロ円（EUR/JPY） <span class="pill">チャート</span></h2>
+        <iframe
+          src="https://s.tradingview.com/widgetembed/?symbol=FX%3AEURJPY&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+        </iframe>
+      </section>
+    </div>
 
-<div class="card"><h2>日本30年 <span class="pill">TVC</span></h2>
-<iframe src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AJPT30Y&interval=60"></iframe></div>
-</div>
+    <!-- 国債：ここだけ日足固定（interval=D） -->
+    <h3>国債利回り（米国：主要年限）</h3>
+    <div class="grid">
+      <section class="card">
+        <h2>米国債 2年（DGS2） <span class="pill">日足</span></h2>
+        <iframe
+          src="https://s.tradingview.com/widgetembed/?symbol=FRED%3ADGS2&interval=D&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+        </iframe>
+      </section>
 
-</div>
+      <section class="card">
+        <h2>米国債 5年（DGS5） <span class="pill">日足</span></h2>
+        <iframe
+          src="https://s.tradingview.com/widgetembed/?symbol=FRED%3ADGS5&interval=D&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+        </iframe>
+      </section>
+
+      <section class="card">
+        <h2>米国債 10年（DGS10） <span class="pill">日足</span></h2>
+        <iframe
+          src="https://s.tradingview.com/widgetembed/?symbol=FRED%3ADGS10&interval=D&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+        </iframe>
+      </section>
+
+      <section class="card">
+        <h2>米国債 30年（DGS30） <span class="pill">日足</span></h2>
+        <iframe
+          src="https://s.tradingview.com/widgetembed/?symbol=FRED%3ADGS30&interval=D&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+        </iframe>
+      </section>
+    </div>
+
+    <h3>国債利回り（日本：主要年限）</h3>
+    <div class="grid">
+      <section class="card">
+        <h2>日本国債 2年 <span class="pill">日足</span></h2>
+        <iframe
+          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AJPT2Y&interval=D&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+        </iframe>
+      </section>
+
+      <section class="card">
+        <h2>日本国債 5年 <span class="pill">日足</span></h2>
+        <iframe
+          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AJPT5Y&interval=D&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+        </iframe>
+      </section>
+
+      <section class="card">
+        <h2>日本国債 10年 <span class="pill">日足</span></h2>
+        <iframe
+          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AJPT10Y&interval=D&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+        </iframe>
+      </section>
+
+      <section class="card">
+        <h2>日本国債 30年 <span class="pill">日足</span></h2>
+        <iframe
+          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AJPT30Y&interval=D&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+        </iframe>
+      </section>
+    </div>
+
+    <!-- ニュース -->
+    <h3>ニュース</h3>
+    <div class="grid" style="margin-top:10px;">
+      <section class="card">
+        <h2>埼玉新聞（見出し） <span class="pill">自動</span></h2>
+        <div class="body">
+          <div class="muted">Google News RSSで「saitama-np.co.jp」の記事だけ拾います。</div>
+          <ul id="saitamaList"><li class="muted">読み込み中…</li></ul>
+          <details>
+            <summary>詳細（うまく出ない時）</summary>
+            <div id="saitamaDebug" class="muted mono"></div>
+          </details>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Yahooニュース（トピックス） <span class="pill">自動</span></h2>
+        <div class="body">
+          <ul id="yahooList"><li class="muted">読み込み中…</li></ul>
+          <details>
+            <summary>詳細（うまく出ない時）</summary>
+            <div id="yahooDebug" class="muted mono"></div>
+          </details>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Bloomberg（JP/混在） <span class="pill">自動</span></h2>
+        <div class="body">
+          <div class="muted">Google News RSSで「Bloombergのドメイン」を拾います。</div>
+          <ul id="bloombergList"><li class="muted">読み込み中…</li></ul>
+          <details>
+            <summary>詳細（うまく出ない時）</summary>
+            <div id="bloombergDebug" class="muted mono"></div>
+          </details>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Bloomberg US（見出し・日本語） <span class="pill">翻訳</span></h2>
+        <div class="body">
+          <div class="muted">Bloomberg US RSS（英語）を取得してタイトルだけ日本語化（失敗時は英語のまま）。</div>
+          <ul id="bbusList"><li class="muted">読み込み中…</li></ul>
+          <details>
+            <summary>詳細（うまく出ない時）</summary>
+            <div id="bbusDebug" class="muted mono"></div>
+          </details>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Global Macro Research（更新） <span class="pill">RSS</span></h2>
+        <div class="body">
+          <ul id="gmrList"><li class="muted">読み込み中…</li></ul>
+          <details>
+            <summary>詳細</summary>
+            <div id="gmrDebug" class="muted mono"></div>
+          </details>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Yahoo（橋本淳司さん） <span class="pill">自動</span></h2>
+        <div class="body">
+          <div class="muted">Yahoo直取得は不安定なので、Google News RSS検索（Yahoo + 橋本淳司）で拾います。</div>
+          <ul id="ywaterList"><li class="muted">読み込み中…</li></ul>
+          <details>
+            <summary>詳細</summary>
+            <div id="ywaterDebug" class="muted mono"></div>
+          </details>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>価格.com（米・水） <span class="pill">リンク</span></h2>
+        <div class="body">
+          <ul>
+            <li><a href="https://search.kakaku.com/-/?category=0028" target="_blank" rel="noopener">お米（価格.com検索）</a></li>
+            <li><a href="https://search.kakaku.com/-/?category=0016" target="_blank" rel="noopener">ミネラルウォーター（価格.com検索）</a></li>
+          </ul>
+          <div class="hint" style="margin-top:10px;">
+            価格.comは自動取得が壊れやすいので、リンク先を定点観測する方式です。
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>リンク</h2>
+        <div class="body">
+          <ul>
+            <li><a href="https://x.com/TsutsumiMika" target="_blank" rel="noopener">堤未果さん（X）</a></li>
+            <li><a href="https://www.globalmacroresearch.org/jp/" target="_blank" rel="noopener">Global Macro Research</a></li>
+          </ul>
+          <div class="hint">
+            ニュースが「見つかりませんでした」になるときは、だいたい <b>CORS中継がブロック/不調</b> です。<br>
+            各カードの「詳細」で原因が見えます。
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    // ========= 無料CORS中継（落ちても次を試す） =========
+    const PROXIES = [
+      (u) => "https://square-union-92c7.ryobump33262.workers.dev/proxy?url=" + encodeURIComponent(u),
+      (u) => "https://api.allorigins.win/raw?url=" + encodeURIComponent(u),
+      (u) => "https://api.codetabs.com/v1/proxy?quest=" + encodeURIComponent(u),
+    ];
+
+    const statusEl = document.getElementById("status");
+    function setStatus(title, detail){
+      statusEl.innerHTML = "<b>" + title + "</b><div class='muted mono'>" + (detail || "") + "</div>";
+    }
+
+    async function fetchViaProxies(url){
+      let lastErr = "";
+      for (const p of PROXIES){
+        try{
+          const target = p(url);
+          const res = await fetch(target, { cache: "no-store" });
+          if(!res.ok) throw new Error("HTTP " + res.status);
+          const text = await res.text();
+          return { text, used: target };
+        }catch(e){
+          lastErr = String(e);
+        }
+      }
+      throw new Error("中継が全滅: " + lastErr);
+    }
+
+    // ========= RSS/Atom 両対応パーサ =========
+    function parseFeed(xmlText){
+      const xml = new DOMParser().parseFromString(xmlText, "text/xml");
+
+      const items = Array.from(xml.querySelectorAll("item"));
+      if (items.length) {
+        return items.slice(0, 10).map(it => ({
+          title: (it.querySelector("title")?.textContent || "").trim(),
+          link: (it.querySelector("link")?.textContent || "").trim()
+        })).filter(x => x.title && x.link);
+      }
+
+      const entries = Array.from(xml.querySelectorAll("entry"));
+      if (entries.length) {
+        return entries.slice(0, 10).map(en => {
+          const title = (en.querySelector("title")?.textContent || "").trim();
+          const linkEl = en.querySelector("link");
+          const link = (linkEl?.getAttribute("href") || linkEl?.textContent || "").trim();
+          return { title, link };
+        }).filter(x => x.title && x.link);
+      }
+
+      return [];
+    }
+
+    function looksLikeFeed(text){
+      return text.includes("<rss") || text.includes("<feed") || text.includes("<channel") || text.includes("<item") || text.includes("<entry");
+    }
+
+    async function loadFeed(rssUrl, listId, debugId){
+      const ul = document.getElementById(listId);
+      const dbg = document.getElementById(debugId);
+      ul.innerHTML = "<li class='muted'>読み込み中…</li>";
+      dbg.textContent = "";
+
+      const { text, used } = await fetchViaProxies(rssUrl);
+      const head = text.slice(0, 400).replaceAll("\r", "");
+      dbg.textContent = "取得URL:\n" + rssUrl + "\n\n中継:\n" + used + "\n\n先頭400文字:\n" + head;
+
+      if (!looksLikeFeed(text)){
+        ul.innerHTML = "<li class='muted'>RSSではない内容が返りました（ブロック/制限の可能性）。詳細を開いてください。</li>";
+        return;
+      }
+
+      const items = parseFeed(text);
+      ul.innerHTML = "";
+
+      for (const it of items){
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.href = it.link;
+        a.textContent = it.title;
+        a.target = "_blank";
+        a.rel = "noopener";
+        li.appendChild(a);
+        ul.appendChild(li);
+      }
+
+      if(items.length === 0){
+        ul.innerHTML = "<li class='muted'>見出しが見つかりませんでした（詳細を開いて中身を確認してください）。</li>";
+      }
+    }
+
+    // ========= 英→日 翻訳（無料API：失敗時は英語のまま） =========
+    async function translateEnToJa(text){
+      const key = "tr_enja_" + text;
+      const cached = sessionStorage.getItem(key);
+      if (cached) return cached;
+
+      const apiUrl = "https://api.mymemory.translated.net/get?q=" + encodeURIComponent(text) + "&langpair=en|ja";
+      try{
+        const res = await fetch(apiUrl, { cache: "no-store" });
+        if(!res.ok) throw new Error("HTTP " + res.status);
+        const json = await res.json();
+        const out = (json?.responseData?.translatedText || "").trim();
+        const finalText = out || text;
+        sessionStorage.setItem(key, finalText);
+        return finalText;
+      }catch(e){
+        try{
+          const { text: j } = await fetchViaProxies(apiUrl);
+          const json = JSON.parse(j);
+          const out = (json?.responseData?.translatedText || "").trim();
+          const finalText = out || text;
+          sessionStorage.setItem(key, finalText);
+          return finalText;
+        }catch(_){
+          return text;
+        }
+      }
+    }
+
+    async function loadFeedTranslated(rssUrl, listId, debugId){
+      const ul = document.getElementById(listId);
+      const dbg = document.getElementById(debugId);
+      ul.innerHTML = "<li class='muted'>読み込み中…</li>";
+      dbg.textContent = "";
+
+      const { text, used } = await fetchViaProxies(rssUrl);
+      const head = text.slice(0, 400).replaceAll("\r", "");
+      dbg.textContent = "取得URL:\n" + rssUrl + "\n\n中継:\n" + used + "\n\n先頭400文字:\n" + head;
+
+      if (!looksLikeFeed(text)){
+        ul.innerHTML = "<li class='muted'>RSSではない内容が返りました（ブロック/制限の可能性）。</li>";
+        return;
+      }
+
+      const items = parseFeed(text);
+      ul.innerHTML = "";
+
+      const sliced = items.slice(0, 8);
+      for (const it of sliced){
+        let titleJa = it.title;
+        try{ titleJa = await translateEnToJa(it.title); }catch(e){ titleJa = it.title; }
+
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+        a.href = it.link;
+        a.textContent = titleJa;
+        a.target = "_blank";
+        a.rel = "noopener";
+        li.appendChild(a);
+        ul.appendChild(li);
+      }
+
+      if(sliced.length === 0){
+        ul.innerHTML = "<li class='muted'>見出しが見つかりませんでした。</li>";
+      }
+    }
+
+    async function main(){
+      try{
+        setStatus("状態：読み込み中…", "ニュース見出しを取得しています。");
+
+        const YAHOO_TOP = "https://news.yahoo.co.jp/rss/topics/top-picks.xml";
+        const SAITAMA = "https://news.google.com/rss/search?q=site:saitama-np.co.jp&hl=ja&gl=JP&ceid=JP:ja";
+        const BLOOMBERG = "https://news.google.com/rss/search?q=site:bloomberg.co.jp%20OR%20site:bloomberg.com&hl=ja&gl=JP&ceid=JP:ja";
+
+        const BLOOMBERG_US = "https://feeds.bloomberg.com/markets/news.rss";
+        const GMR = "https://www.globalmacroresearch.org/jp/feed";
+
+        const YAHOO_HASHIMOTO =
+          "https://news.google.com/rss/search?q=site:news.yahoo.co.jp%20%E6%A9%8B%E6%9C%AC%E6%B7%B3%E5%8F%B8&hl=ja&gl=JP&ceid=JP:ja";
+
+        await Promise.all([
+          loadFeed(SAITAMA, "saitamaList", "saitamaDebug"),
+          loadFeed(YAHOO_TOP, "yahooList", "yahooDebug"),
+          loadFeed(BLOOMBERG, "bloombergList", "bloombergDebug"),
+
+          loadFeedTranslated(BLOOMBERG_US, "bbusList", "bbusDebug"),
+          loadFeed(GMR, "gmrList", "gmrDebug"),
+          loadFeed(YAHOO_HASHIMOTO, "ywaterList", "ywaterDebug"),
+        ]);
+
+        setStatus("状態：OK", "表示できました。特定枠だけダメなら、その枠の「詳細」で原因が見えます。");
+      }catch(e){
+        setStatus("状態：通信エラー", String(e));
+      }
+    }
+
+    main();
+    setInterval(main, 10 * 60 * 1000);
+  </script>
 </body>
 </html>
