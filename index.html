@@ -13,6 +13,8 @@
     .wrap{padding:14px 16px;max-width:1100px;margin:0 auto}
     .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
     @media (max-width: 900px){.grid{grid-template-columns:1fr}}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    @media (max-width: 900px){.row{grid-template-columns:1fr}}
     .card{border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;background:#fff}
     .card h2{margin:0;padding:10px 12px;font-size:14px;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between;align-items:center;gap:10px}
     .card .body{padding:10px 12px}
@@ -21,14 +23,15 @@
     li{margin:6px 0;line-height:1.4}
     a{color:#2563eb}
     iframe{width:100%;height:320px;border:0}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    @media (max-width: 900px){.row{grid-template-columns:1fr}}
     .pill{font-size:12px;border:1px solid #e5e7eb;border-radius:999px;padding:2px 8px;color:#374151}
     .status{margin-bottom:12px;padding:10px 12px;border:1px solid #e5e7eb;border-radius:12px;background:#f9fafb}
     .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;white-space:pre-wrap}
     details{margin-top:8px}
     summary{cursor:pointer;color:#374151;font-size:12px}
     .hint{font-size:12px;color:#374151;background:#fff7ed;border:1px solid #fed7aa;padding:8px 10px;border-radius:10px}
+    .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+    .btn{display:inline-block;border:1px solid #e5e7eb;border-radius:10px;padding:8px 10px;font-size:12px;color:#111;text-decoration:none;background:#fff}
+    .btn:hover{background:#f9fafb}
   </style>
 </head>
 <body>
@@ -69,10 +72,10 @@
       </section>
 
       <section class="card">
-        <h2>小麦（Wheat） <span class="pill">チャート</span></h2>
-        <!-- もし表示されない場合は TradingView 上で "WHEAT" を検索して、出たシンボルに差し替えてOK -->
+        <h2>小麦（Wheat：CBOT） <span class="pill">先物</span></h2>
+        <!-- TVC:WHEAT は存在しないので CBOT:ZW1! を使用 -->
         <iframe
-          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AWHEAT&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+          src="https://s.tradingview.com/widgetembed/?symbol=CBOT%3AZW1%21&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
         </iframe>
       </section>
     </div>
@@ -95,7 +98,7 @@
       </section>
     </div>
 
-    <!-- 国債：FREDは1D未満不可なので日足固定 -->
+    <!-- 国債：米国はFREDでOK（ただし日足固定） -->
     <h3>国債利回り（米国：主要年限）</h3>
     <div class="grid">
       <section class="card">
@@ -127,34 +130,37 @@
       </section>
     </div>
 
-    <h3>国債利回り（日本：主要年限）</h3>
+    <!-- 日本国債：TradingView埋め込み制限 → リンク方式 + FREDで日本10年だけ表示 -->
+    <h3>国債利回り（日本）</h3>
     <div class="grid">
       <section class="card">
-        <h2>日本国債 2年（JP02Y） <span class="pill">日足</span></h2>
+        <h2>日本10年（FRED） <span class="pill">表示OK</span></h2>
         <iframe
-          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AJP02Y&interval=D&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+          src="https://s.tradingview.com/widgetembed/?symbol=FRED%3AIRLTLT01JPM156N&interval=D&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
         </iframe>
+        <div class="body">
+          <div class="muted">日本10年はFRED（OECD系列）で表示しています。</div>
+        </div>
       </section>
 
       <section class="card">
-        <h2>日本国債 5年（JP05Y） <span class="pill">日足</span></h2>
-        <iframe
-          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AJP05Y&interval=D&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
-        </iframe>
-      </section>
+        <h2>日本国債（2/5/10/30年） <span class="pill">リンク</span></h2>
+        <div class="body">
+          <div class="muted">
+            日本国債のTradingViewシンボルは、外部iframeだと「TradingView内のみ」制限が出るため、ダッシュボードから直接開く方式にしています。
+          </div>
 
-      <section class="card">
-        <h2>日本国債 10年（JP10Y） <span class="pill">日足</span></h2>
-        <iframe
-          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AJP10Y&interval=D&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
-        </iframe>
-      </section>
+          <div class="btnrow">
+            <a class="btn" target="_blank" rel="noopener" href="https://tradingview.com/symbols/TVC-JP02Y/">JP02Y（2年）を開く</a>
+            <a class="btn" target="_blank" rel="noopener" href="https://tradingview.com/symbols/TVC-JP05Y/">JP05Y（5年）を開く</a>
+            <a class="btn" target="_blank" rel="noopener" href="https://tradingview.com/symbols/TVC-JP10Y/">JP10Y（10年）を開く</a>
+            <a class="btn" target="_blank" rel="noopener" href="https://tradingview.com/symbols/TVC-JP30Y/">JP30Y（30年）を開く</a>
+          </div>
 
-      <section class="card">
-        <h2>日本国債 30年（JP30Y） <span class="pill">日足</span></h2>
-        <iframe
-          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AJP30Y&interval=D&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
-        </iframe>
+          <div class="hint" style="margin-top:10px;">
+            「ページ内にチャートを埋め込みたい」場合は、TradingView制限回避のために別データソース（MOF/BOJ等）を取得して自前描画に切り替える必要があります。
+          </div>
+        </div>
       </section>
     </div>
 
