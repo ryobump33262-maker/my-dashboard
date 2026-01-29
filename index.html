@@ -9,6 +9,7 @@
     body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans JP",sans-serif;background:#fff;color:#111}
     header{padding:14px 16px;border-bottom:1px solid #e5e7eb;position:sticky;top:0;background:#fff;z-index:10}
     h1{margin:0;font-size:18px}
+    h3{margin:18px 0 10px;font-size:14px;color:#111}
     .wrap{padding:14px 16px;max-width:1100px;margin:0 auto}
     .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
     @media (max-width: 900px){.grid{grid-template-columns:1fr}}
@@ -41,7 +42,8 @@
       <div class="muted">（ニュースが出ない時は、各カードの「詳細」を開くと原因が見えます）</div>
     </div>
 
-    <!-- 金と原油（TradingView） -->
+    <!-- コモディティ -->
+    <h3>コモディティ</h3>
     <div class="row">
       <section class="card">
         <h2>金（Gold） <span class="pill">チャート</span></h2>
@@ -51,15 +53,32 @@
       </section>
 
       <section class="card">
+        <h2>銀（Silver） <span class="pill">チャート</span></h2>
+        <iframe
+          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3ASILVER&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+        </iframe>
+      </section>
+    </div>
+
+    <div class="row" style="margin-top:14px;">
+      <section class="card">
         <h2>原油（WTI） <span class="pill">チャート</span></h2>
         <iframe
           src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AUSOIL&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
         </iframe>
       </section>
+
+      <section class="card">
+        <h2>（予備枠） <span class="pill">空</span></h2>
+        <div class="body">
+          <div class="muted">ここは将来追加用（例：銅、天然ガス、DXYなど）。</div>
+        </div>
+      </section>
     </div>
 
-    <!-- 為替（TradingView） -->
-    <div class="row" style="margin-top:14px;">
+    <!-- 為替 -->
+    <h3>為替</h3>
+    <div class="row">
       <section class="card">
         <h2>ドル円（USD/JPY） <span class="pill">チャート</span></h2>
         <iframe
@@ -75,8 +94,70 @@
       </section>
     </div>
 
+    <!-- 国債利回り -->
+    <h3>国債利回り（米国：主要年限）</h3>
+    <div class="grid">
+      <section class="card">
+        <h2>米国債 2年（US02Y） <span class="pill">利回り</span></h2>
+        <iframe
+          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AUS02Y&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+        </iframe>
+      </section>
+      <section class="card">
+        <h2>米国債 5年（US05Y） <span class="pill">利回り</span></h2>
+        <iframe
+          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AUS05Y&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+        </iframe>
+      </section>
+      <section class="card">
+        <h2>米国債 10年（US10Y） <span class="pill">利回り</span></h2>
+        <iframe
+          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AUS10Y&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+        </iframe>
+      </section>
+      <section class="card">
+        <h2>米国債 30年（US30Y） <span class="pill">利回り</span></h2>
+        <iframe
+          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AUS30Y&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+        </iframe>
+      </section>
+    </div>
+
+    <h3>国債利回り（日本：主要年限）</h3>
+    <div class="grid">
+      <section class="card">
+        <h2>日本国債 2年（JP02Y） <span class="pill">利回り</span></h2>
+        <iframe
+          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AJP02Y&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+        </iframe>
+      </section>
+      <section class="card">
+        <h2>日本国債 5年（JP05Y） <span class="pill">利回り</span></h2>
+        <iframe
+          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AJP05Y&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+        </iframe>
+      </section>
+      <section class="card">
+        <h2>日本国債 10年（JP10Y） <span class="pill">利回り</span></h2>
+        <iframe
+          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AJP10Y&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+        </iframe>
+      </section>
+      <section class="card">
+        <h2>日本国債 30年（JP30Y） <span class="pill">利回り</span></h2>
+        <iframe
+          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AJP30Y&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+        </iframe>
+      </section>
+    </div>
+
+    <div class="hint" style="margin-top:14px;">
+      もし一部の国債シンボルが表示されない場合は、そのカード名の国債（例：JP30Y）をTradingView上で検索して、見つかったシンボルに置き換えればOKです。
+    </div>
+
     <!-- ニュース -->
-    <div class="grid" style="margin-top:14px;">
+    <h3>ニュース</h3>
+    <div class="grid" style="margin-top:10px;">
       <section class="card">
         <h2>埼玉新聞（見出し） <span class="pill">自動</span></h2>
         <div class="body">
@@ -163,7 +244,7 @@
             </li>
           </ul>
           <div class="hint" style="margin-top:10px;">
-            価格.comは自動取得が壊れやすいので、リンク先を定点観測する方式に変更しました。
+            価格.comは自動取得が壊れやすいので、リンク先を定点観測する方式です。
           </div>
         </div>
       </section>
@@ -177,7 +258,7 @@
           </ul>
           <div class="hint">
             ニュースが「見つかりませんでした」になるときは、だいたい <b>CORS中継がブロック/不調</b> です。<br>
-            Worker中継が死んだ時は、カードの「詳細」でどの中継が返してるか確認できます。
+            各カードの「詳細」で、どの中継が返してるか確認できます。
           </div>
         </div>
       </section>
@@ -360,7 +441,6 @@
         const BLOOMBERG_US = "https://feeds.bloomberg.com/markets/news.rss";
         const GMR = "https://www.globalmacroresearch.org/jp/feed";
 
-        // Yahoo（水ジャーナリスト：橋本淳司さん）
         const YAHOO_HASHIMOTO =
           "https://news.google.com/rss/search?q=site:news.yahoo.co.jp%20%E6%A9%8B%E6%9C%AC%E6%B7%B3%E5%8F%B8&hl=ja&gl=JP&ceid=JP:ja";
 
