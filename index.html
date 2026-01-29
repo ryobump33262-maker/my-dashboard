@@ -69,10 +69,11 @@
       </section>
 
       <section class="card">
-        <h2>（予備） <span class="pill">空</span></h2>
-        <div class="body">
-          <div class="muted">将来追加用（例：銅、天然ガス、DXY、S&P500など）。</div>
-        </div>
+        <h2>小麦（Wheat） <span class="pill">チャート</span></h2>
+        <!-- もし表示されない場合は TradingView 上で "WHEAT" を検索して、出たシンボルに差し替えてOK -->
+        <iframe
+          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AWHEAT&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+        </iframe>
       </section>
     </div>
 
@@ -94,7 +95,7 @@
       </section>
     </div>
 
-    <!-- 国債：ここだけ日足固定（interval=D） -->
+    <!-- 国債：FREDは1D未満不可なので日足固定 -->
     <h3>国債利回り（米国：主要年限）</h3>
     <div class="grid">
       <section class="card">
@@ -129,30 +130,30 @@
     <h3>国債利回り（日本：主要年限）</h3>
     <div class="grid">
       <section class="card">
-        <h2>日本国債 2年 <span class="pill">日足</span></h2>
+        <h2>日本国債 2年（JP02Y） <span class="pill">日足</span></h2>
         <iframe
-          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AJPT2Y&interval=D&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AJP02Y&interval=D&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
         </iframe>
       </section>
 
       <section class="card">
-        <h2>日本国債 5年 <span class="pill">日足</span></h2>
+        <h2>日本国債 5年（JP05Y） <span class="pill">日足</span></h2>
         <iframe
-          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AJPT5Y&interval=D&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AJP05Y&interval=D&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
         </iframe>
       </section>
 
       <section class="card">
-        <h2>日本国債 10年 <span class="pill">日足</span></h2>
+        <h2>日本国債 10年（JP10Y） <span class="pill">日足</span></h2>
         <iframe
-          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AJPT10Y&interval=D&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AJP10Y&interval=D&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
         </iframe>
       </section>
 
       <section class="card">
-        <h2>日本国債 30年 <span class="pill">日足</span></h2>
+        <h2>日本国債 30年（JP30Y） <span class="pill">日足</span></h2>
         <iframe
-          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AJPT30Y&interval=D&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
+          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AJP30Y&interval=D&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
         </iframe>
       </section>
     </div>
@@ -260,7 +261,7 @@
   </div>
 
   <script>
-    // ========= 無料CORS中継（落ちても次を試す） =========
+    // ========= CORS中継（落ちても次を試す） =========
     const PROXIES = [
       (u) => "https://square-union-92c7.ryobump33262.workers.dev/proxy?url=" + encodeURIComponent(u),
       (u) => "https://api.allorigins.win/raw?url=" + encodeURIComponent(u),
@@ -436,7 +437,6 @@
           loadFeed(SAITAMA, "saitamaList", "saitamaDebug"),
           loadFeed(YAHOO_TOP, "yahooList", "yahooDebug"),
           loadFeed(BLOOMBERG, "bloombergList", "bloombergDebug"),
-
           loadFeedTranslated(BLOOMBERG_US, "bbusList", "bbusDebug"),
           loadFeed(GMR, "gmrList", "gmrDebug"),
           loadFeed(YAHOO_HASHIMOTO, "ywaterList", "ywaterDebug"),
