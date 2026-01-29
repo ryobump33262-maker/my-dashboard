@@ -23,7 +23,7 @@
     li{margin:6px 0;line-height:1.4}
     a{color:#2563eb}
     iframe{width:100%;height:320px;border:0}
-    .pill{font-size:12px;border:1px solid #e5e7eb;border-radius:999px;padding:2px 8px;color:#374151}
+    .pill{font-size:12px;border:1px solid #e5e7eb;border-radius:999px;padding:2px 8px;color:#374151;white-space:nowrap}
     .status{margin-bottom:12px;padding:10px 12px;border:1px solid #e5e7eb;border-radius:12px;background:#f9fafb}
     .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;white-space:pre-wrap}
     details{margin-top:8px}
@@ -32,12 +32,17 @@
     .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
     .btn{display:inline-block;border:1px solid #e5e7eb;border-radius:10px;padding:8px 10px;font-size:12px;color:#111;text-decoration:none;background:#fff}
     .btn:hover{background:#f9fafb}
+
+    /* 自前チャート */
+    .chartWrap{padding:10px 12px}
+    canvas{width:100%;height:260px;display:block}
+    .legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+    .chip{font-size:12px;border:1px solid #e5e7eb;border-radius:999px;padding:2px 8px;color:#374151}
+    .err{color:#b91c1c}
   </style>
 </head>
 <body>
-  <header>
-    <h1>My Simple Dashboard</h1>
-  </header>
+  <header><h1>My Simple Dashboard</h1></header>
 
   <div class="wrap">
     <div id="status" class="status">
@@ -49,34 +54,33 @@
     <h3>コモディティ</h3>
     <div class="row">
       <section class="card">
-        <h2>金（Gold） <span class="pill">チャート</span></h2>
-        <iframe
-          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AGOLD&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
-        </iframe>
+        <h2>金（Gold） <span class="pill">TradingView</span></h2>
+        <iframe src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AGOLD&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0"></iframe>
       </section>
 
       <section class="card">
-        <h2>銀（Silver） <span class="pill">チャート</span></h2>
-        <iframe
-          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3ASILVER&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
-        </iframe>
+        <h2>銀（Silver） <span class="pill">TradingView</span></h2>
+        <iframe src="https://s.tradingview.com/widgetembed/?symbol=TVC%3ASILVER&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0"></iframe>
       </section>
     </div>
 
     <div class="row" style="margin-top:14px;">
       <section class="card">
-        <h2>原油（WTI） <span class="pill">チャート</span></h2>
-        <iframe
-          src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AUSOIL&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
-        </iframe>
+        <h2>原油（WTI） <span class="pill">TradingView</span></h2>
+        <iframe src="https://s.tradingview.com/widgetembed/?symbol=TVC%3AUSOIL&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0"></iframe>
       </section>
 
       <section class="card">
-        <h2>小麦（Wheat：CBOT） <span class="pill">先物</span></h2>
-        <!-- TVC:WHEAT は存在しないので CBOT:ZW1! を使用 -->
-        <iframe
-          src="https://s.tradingview.com/widgetembed/?symbol=CBOT%3AZW1%21&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
-        </iframe>
+        <h2>小麦（Wheat） <span class="pill">リンク</span></h2>
+        <div class="body">
+          <div class="muted">小麦はTradingView埋め込みで「TradingView内のみ」制限が出たので、定点観測はリンクで。</div>
+          <div class="btnrow">
+            <a class="btn" target="_blank" rel="noopener" href="https://www.cmegroup.com/markets/agriculture/grains/wheat.html">CME（Wheat）</a>
+            <a class="btn" target="_blank" rel="noopener" href="https://stooq.com/q/?s=zw.f">Stooq（Wheat 先物）</a>
+            <a class="btn" target="_blank" rel="noopener" href="https://www.marketwatch.com/investing/future/w00">MarketWatch（Wheat 連続）</a>
+          </div>
+          <div class="hint" style="margin-top:10px;">「小麦も自前チャート化」したくなったら、無料で取れるCSV源に合わせて同じ仕組みで描けるよ。</div>
+        </div>
       </section>
     </div>
 
@@ -84,82 +88,48 @@
     <h3>為替</h3>
     <div class="row">
       <section class="card">
-        <h2>ドル円（USD/JPY） <span class="pill">チャート</span></h2>
-        <iframe
-          src="https://s.tradingview.com/widgetembed/?symbol=FX%3AUSDJPY&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
-        </iframe>
+        <h2>ドル円（USD/JPY） <span class="pill">TradingView</span></h2>
+        <iframe src="https://s.tradingview.com/widgetembed/?symbol=FX%3AUSDJPY&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0"></iframe>
       </section>
 
       <section class="card">
-        <h2>ユーロ円（EUR/JPY） <span class="pill">チャート</span></h2>
-        <iframe
-          src="https://s.tradingview.com/widgetembed/?symbol=FX%3AEURJPY&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
-        </iframe>
+        <h2>ユーロ円（EUR/JPY） <span class="pill">TradingView</span></h2>
+        <iframe src="https://s.tradingview.com/widgetembed/?symbol=FX%3AEURJPY&interval=60&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0"></iframe>
       </section>
     </div>
 
-    <!-- 国債：米国はFREDでOK（ただし日足固定） -->
-    <h3>国債利回り（米国：主要年限）</h3>
+    <!-- 国債：自前折れ線 -->
+    <h3>国債利回り（自前折れ線）</h3>
     <div class="grid">
       <section class="card">
-        <h2>米国債 2年（DGS2） <span class="pill">日足</span></h2>
-        <iframe
-          src="https://s.tradingview.com/widgetembed/?symbol=FRED%3ADGS2&interval=D&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
-        </iframe>
-      </section>
-
-      <section class="card">
-        <h2>米国債 5年（DGS5） <span class="pill">日足</span></h2>
-        <iframe
-          src="https://s.tradingview.com/widgetembed/?symbol=FRED%3ADGS5&interval=D&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
-        </iframe>
-      </section>
-
-      <section class="card">
-        <h2>米国債 10年（DGS10） <span class="pill">日足</span></h2>
-        <iframe
-          src="https://s.tradingview.com/widgetembed/?symbol=FRED%3ADGS10&interval=D&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
-        </iframe>
-      </section>
-
-      <section class="card">
-        <h2>米国債 30年（DGS30） <span class="pill">日足</span></h2>
-        <iframe
-          src="https://s.tradingview.com/widgetembed/?symbol=FRED%3ADGS30&interval=D&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
-        </iframe>
-      </section>
-    </div>
-
-    <!-- 日本国債：TradingView埋め込み制限 → リンク方式 + FREDで日本10年だけ表示 -->
-    <h3>国債利回り（日本）</h3>
-    <div class="grid">
-      <section class="card">
-        <h2>日本10年（FRED） <span class="pill">表示OK</span></h2>
-        <iframe
-          src="https://s.tradingview.com/widgetembed/?symbol=FRED%3AIRLTLT01JPM156N&interval=D&hidesidetoolbar=1&theme=light&style=1&timezone=Asia%2FTokyo&withdateranges=1&hidevolume=0">
-        </iframe>
-        <div class="body">
-          <div class="muted">日本10年はFRED（OECD系列）で表示しています。</div>
+        <h2>日本国債（財務省） <span class="pill">日次</span></h2>
+        <div class="chartWrap">
+          <canvas id="jgbCanvas"></canvas>
+          <div class="legend">
+            <span class="chip">2Y</span><span class="chip">5Y</span><span class="chip">10Y</span><span class="chip">30Y</span>
+            <span class="chip" id="jgbMeta"></span>
+          </div>
+          <div id="jgbErr" class="muted err"></div>
+          <details>
+            <summary>詳細</summary>
+            <div id="jgbDebug" class="muted mono"></div>
+          </details>
         </div>
       </section>
 
       <section class="card">
-        <h2>日本国債（2/5/10/30年） <span class="pill">リンク</span></h2>
-        <div class="body">
-          <div class="muted">
-            日本国債のTradingViewシンボルは、外部iframeだと「TradingView内のみ」制限が出るため、ダッシュボードから直接開く方式にしています。
+        <h2>米国債（FRED） <span class="pill">日次</span></h2>
+        <div class="chartWrap">
+          <canvas id="ustCanvas"></canvas>
+          <div class="legend">
+            <span class="chip">2Y</span><span class="chip">5Y</span><span class="chip">10Y</span><span class="chip">30Y</span>
+            <span class="chip" id="ustMeta"></span>
           </div>
-
-          <div class="btnrow">
-            <a class="btn" target="_blank" rel="noopener" href="https://tradingview.com/symbols/TVC-JP02Y/">JP02Y（2年）を開く</a>
-            <a class="btn" target="_blank" rel="noopener" href="https://tradingview.com/symbols/TVC-JP05Y/">JP05Y（5年）を開く</a>
-            <a class="btn" target="_blank" rel="noopener" href="https://tradingview.com/symbols/TVC-JP10Y/">JP10Y（10年）を開く</a>
-            <a class="btn" target="_blank" rel="noopener" href="https://tradingview.com/symbols/TVC-JP30Y/">JP30Y（30年）を開く</a>
-          </div>
-
-          <div class="hint" style="margin-top:10px;">
-            「ページ内にチャートを埋め込みたい」場合は、TradingView制限回避のために別データソース（MOF/BOJ等）を取得して自前描画に切り替える必要があります。
-          </div>
+          <div id="ustErr" class="muted err"></div>
+          <details>
+            <summary>詳細</summary>
+            <div id="ustDebug" class="muted mono"></div>
+          </details>
         </div>
       </section>
     </div>
@@ -172,10 +142,7 @@
         <div class="body">
           <div class="muted">Google News RSSで「saitama-np.co.jp」の記事だけ拾います。</div>
           <ul id="saitamaList"><li class="muted">読み込み中…</li></ul>
-          <details>
-            <summary>詳細（うまく出ない時）</summary>
-            <div id="saitamaDebug" class="muted mono"></div>
-          </details>
+          <details><summary>詳細（うまく出ない時）</summary><div id="saitamaDebug" class="muted mono"></div></details>
         </div>
       </section>
 
@@ -183,10 +150,7 @@
         <h2>Yahooニュース（トピックス） <span class="pill">自動</span></h2>
         <div class="body">
           <ul id="yahooList"><li class="muted">読み込み中…</li></ul>
-          <details>
-            <summary>詳細（うまく出ない時）</summary>
-            <div id="yahooDebug" class="muted mono"></div>
-          </details>
+          <details><summary>詳細（うまく出ない時）</summary><div id="yahooDebug" class="muted mono"></div></details>
         </div>
       </section>
 
@@ -195,10 +159,7 @@
         <div class="body">
           <div class="muted">Google News RSSで「Bloombergのドメイン」を拾います。</div>
           <ul id="bloombergList"><li class="muted">読み込み中…</li></ul>
-          <details>
-            <summary>詳細（うまく出ない時）</summary>
-            <div id="bloombergDebug" class="muted mono"></div>
-          </details>
+          <details><summary>詳細（うまく出ない時）</summary><div id="bloombergDebug" class="muted mono"></div></details>
         </div>
       </section>
 
@@ -207,10 +168,7 @@
         <div class="body">
           <div class="muted">Bloomberg US RSS（英語）を取得してタイトルだけ日本語化（失敗時は英語のまま）。</div>
           <ul id="bbusList"><li class="muted">読み込み中…</li></ul>
-          <details>
-            <summary>詳細（うまく出ない時）</summary>
-            <div id="bbusDebug" class="muted mono"></div>
-          </details>
+          <details><summary>詳細（うまく出ない時）</summary><div id="bbusDebug" class="muted mono"></div></details>
         </div>
       </section>
 
@@ -218,10 +176,7 @@
         <h2>Global Macro Research（更新） <span class="pill">RSS</span></h2>
         <div class="body">
           <ul id="gmrList"><li class="muted">読み込み中…</li></ul>
-          <details>
-            <summary>詳細</summary>
-            <div id="gmrDebug" class="muted mono"></div>
-          </details>
+          <details><summary>詳細</summary><div id="gmrDebug" class="muted mono"></div></details>
         </div>
       </section>
 
@@ -230,10 +185,7 @@
         <div class="body">
           <div class="muted">Yahoo直取得は不安定なので、Google News RSS検索（Yahoo + 橋本淳司）で拾います。</div>
           <ul id="ywaterList"><li class="muted">読み込み中…</li></ul>
-          <details>
-            <summary>詳細</summary>
-            <div id="ywaterDebug" class="muted mono"></div>
-          </details>
+          <details><summary>詳細</summary><div id="ywaterDebug" class="muted mono"></div></details>
         </div>
       </section>
 
@@ -244,9 +196,7 @@
             <li><a href="https://search.kakaku.com/-/?category=0028" target="_blank" rel="noopener">お米（価格.com検索）</a></li>
             <li><a href="https://search.kakaku.com/-/?category=0016" target="_blank" rel="noopener">ミネラルウォーター（価格.com検索）</a></li>
           </ul>
-          <div class="hint" style="margin-top:10px;">
-            価格.comは自動取得が壊れやすいので、リンク先を定点観測する方式です。
-          </div>
+          <div class="hint" style="margin-top:10px;">価格.comは自動取得が壊れやすいので、リンク先を定点観測する方式です。</div>
         </div>
       </section>
 
@@ -257,10 +207,7 @@
             <li><a href="https://x.com/TsutsumiMika" target="_blank" rel="noopener">堤未果さん（X）</a></li>
             <li><a href="https://www.globalmacroresearch.org/jp/" target="_blank" rel="noopener">Global Macro Research</a></li>
           </ul>
-          <div class="hint">
-            ニュースが「見つかりませんでした」になるときは、だいたい <b>CORS中継がブロック/不調</b> です。<br>
-            各カードの「詳細」で原因が見えます。
-          </div>
+          <div class="hint">ニュースが「見つかりませんでした」になるときは、だいたい <b>CORS中継がブロック/不調</b> です。各カードの「詳細」で原因が見えます。</div>
         </div>
       </section>
     </div>
@@ -295,10 +242,9 @@
       throw new Error("中継が全滅: " + lastErr);
     }
 
-    // ========= RSS/Atom 両対応パーサ =========
+    // ========= RSS/Atom =========
     function parseFeed(xmlText){
       const xml = new DOMParser().parseFromString(xmlText, "text/xml");
-
       const items = Array.from(xml.querySelectorAll("item"));
       if (items.length) {
         return items.slice(0, 10).map(it => ({
@@ -306,7 +252,6 @@
           link: (it.querySelector("link")?.textContent || "").trim()
         })).filter(x => x.title && x.link);
       }
-
       const entries = Array.from(xml.querySelectorAll("entry"));
       if (entries.length) {
         return entries.slice(0, 10).map(en => {
@@ -316,14 +261,11 @@
           return { title, link };
         }).filter(x => x.title && x.link);
       }
-
       return [];
     }
-
     function looksLikeFeed(text){
       return text.includes("<rss") || text.includes("<feed") || text.includes("<channel") || text.includes("<item") || text.includes("<entry");
     }
-
     async function loadFeed(rssUrl, listId, debugId){
       const ul = document.getElementById(listId);
       const dbg = document.getElementById(debugId);
@@ -341,24 +283,19 @@
 
       const items = parseFeed(text);
       ul.innerHTML = "";
-
       for (const it of items){
         const li = document.createElement("li");
         const a = document.createElement("a");
-        a.href = it.link;
-        a.textContent = it.title;
-        a.target = "_blank";
-        a.rel = "noopener";
-        li.appendChild(a);
-        ul.appendChild(li);
+        a.href = it.link; a.textContent = it.title;
+        a.target = "_blank"; a.rel = "noopener";
+        li.appendChild(a); ul.appendChild(li);
       }
-
       if(items.length === 0){
         ul.innerHTML = "<li class='muted'>見出しが見つかりませんでした（詳細を開いて中身を確認してください）。</li>";
       }
     }
 
-    // ========= 英→日 翻訳（無料API：失敗時は英語のまま） =========
+    // ========= 翻訳 =========
     async function translateEnToJa(text){
       const key = "tr_enja_" + text;
       const cached = sessionStorage.getItem(key);
@@ -402,40 +339,292 @@
         return;
       }
 
-      const items = parseFeed(text);
+      const items = parseFeed(text).slice(0, 8);
       ul.innerHTML = "";
-
-      const sliced = items.slice(0, 8);
-      for (const it of sliced){
-        let titleJa = it.title;
-        try{ titleJa = await translateEnToJa(it.title); }catch(e){ titleJa = it.title; }
-
+      for (const it of items){
+        const titleJa = await translateEnToJa(it.title);
         const li = document.createElement("li");
         const a = document.createElement("a");
-        a.href = it.link;
-        a.textContent = titleJa;
-        a.target = "_blank";
-        a.rel = "noopener";
-        li.appendChild(a);
-        ul.appendChild(li);
+        a.href = it.link; a.textContent = titleJa;
+        a.target = "_blank"; a.rel = "noopener";
+        li.appendChild(a); ul.appendChild(li);
       }
-
-      if(sliced.length === 0){
-        ul.innerHTML = "<li class='muted'>見出しが見つかりませんでした。</li>";
-      }
+      if(items.length === 0) ul.innerHTML = "<li class='muted'>見出しが見つかりませんでした。</li>";
     }
 
+    // ========= CSVパース（シンプル） =========
+    function parseCSV(text){
+      const lines = text.replaceAll("\r","").split("\n").filter(Boolean);
+      const header = lines[0].split(",").map(s=>s.trim());
+      const rows = [];
+      for (let i=1;i<lines.length;i++){
+        const cols = lines[i].split(",");
+        if (cols.length < 2) continue;
+        const obj = {};
+        for (let j=0;j<header.length && j<cols.length;j++){
+          obj[header[j]] = cols[j].trim();
+        }
+        rows.push(obj);
+      }
+      return { header, rows };
+    }
+
+    function toDate(s){
+      // "2026/01/29" or "2026-01-29"
+      const t = s.replaceAll("/","-");
+      const d = new Date(t + "T00:00:00");
+      return isNaN(d.getTime()) ? null : d;
+    }
+
+    // ========= 自前折れ線描画 =========
+    function drawMultiLine(canvas, seriesList, labels, opt){
+      const ctx = canvas.getContext("2d");
+      const dpr = window.devicePixelRatio || 1;
+      const w = canvas.clientWidth, h = canvas.clientHeight;
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+
+      // padding
+      const padL=44, padR=12, padT=12, padB=26;
+      const plotW = w - padL - padR;
+      const plotH = h - padT - padB;
+
+      // y-range
+      let ymin = Infinity, ymax = -Infinity;
+      for (const s of seriesList){
+        for (const v of s.values){
+          if (v==null || isNaN(v)) continue;
+          ymin = Math.min(ymin, v);
+          ymax = Math.max(ymax, v);
+        }
+      }
+      if (!isFinite(ymin) || !isFinite(ymax)) return;
+      const padY = (ymax - ymin) * 0.1 || 0.2;
+      ymin -= padY; ymax += padY;
+
+      const xTo = (i)=> padL + (i/(labels.length-1))*plotW;
+      const yTo = (v)=> padT + (1-(v-ymin)/(ymax-ymin))*plotH;
+
+      // bg
+      ctx.clearRect(0,0,w,h);
+
+      // grid + axis
+      ctx.strokeStyle = "#e5e7eb";
+      ctx.lineWidth = 1;
+
+      // horizontal grid
+      const gy = 4;
+      for (let k=0;k<=gy;k++){
+        const y = padT + (k/gy)*plotH;
+        ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(padL+plotW,y); ctx.stroke();
+      }
+
+      // y labels
+      ctx.fillStyle = "#6b7280";
+      ctx.font = "12px system-ui";
+      for (let k=0;k<=gy;k++){
+        const val = ymax - (k/gy)*(ymax-ymin);
+        const y = padT + (k/gy)*plotH;
+        ctx.fillText(val.toFixed(2), 6, y+4);
+      }
+
+      // x labels (start / mid / end)
+      const idxs = [0, Math.floor((labels.length-1)/2), labels.length-1];
+      ctx.fillStyle = "#6b7280";
+      ctx.font = "12px system-ui";
+      for (const i of idxs){
+        const x = xTo(i);
+        const txt = labels[i];
+        const tw = ctx.measureText(txt).width;
+        ctx.fillText(txt, x - tw/2, h - 8);
+      }
+
+      // lines (固定パレット)
+      const palette = ["#2563eb","#16a34a","#dc2626","#7c3aed"];
+      seriesList.forEach((s, si)=>{
+        ctx.strokeStyle = palette[si % palette.length];
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        let started = false;
+        for (let i=0;i<s.values.length;i++){
+          const v = s.values[i];
+          if (v==null || isNaN(v)) { started=false; continue; }
+          const x = xTo(i), y = yTo(v);
+          if(!started){ ctx.moveTo(x,y); started=true; }
+          else ctx.lineTo(x,y);
+        }
+        ctx.stroke();
+      });
+
+      // title small
+      ctx.fillStyle = "#111";
+      ctx.font = "12px system-ui";
+      ctx.fillText(opt?.unit ? opt.unit : "%", w-28, 14);
+    }
+
+    function lastNDays(dateObjs, n){
+      if(dateObjs.length<=n) return { start:0, end:dateObjs.length };
+      return { start: dateObjs.length - n, end: dateObjs.length };
+    }
+
+    // ========= 日本国債（MOF CSV） =========
+    async function loadJGB(){
+      const metaEl = document.getElementById("jgbMeta");
+      const errEl = document.getElementById("jgbErr");
+      const dbgEl = document.getElementById("jgbDebug");
+      errEl.textContent = ""; dbgEl.textContent = "";
+
+      // MOF: jgbcme.csv（列：Date,1Y,2Y,3Y,...,30Y,...）
+      const url = "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/jgbcme.csv";
+      const { text, used } = await fetchViaProxies(url);
+      dbgEl.textContent = "取得URL:\n" + url + "\n\n中継:\n" + used + "\n\n先頭400文字:\n" + text.slice(0,400).replaceAll("\r","");
+
+      const { rows } = parseCSV(text);
+
+      // 日付と必要年限
+      const dates = [];
+      日本2 = []; 日本5 = []; 日本10 = []; 日本30 = []; // ←ここで宣言しないとエラーになるので下で正しく宣言する
+    }
+
+    // ↑ ここはJSの構文上いったん中断して、下で正しく実装します
+  </script>
+
+  <script>
+    // ========= 日本国債（MOF CSV） 正式実装 =========
+    async function loadJGB2(){
+      const canvas = document.getElementById("jgbCanvas");
+      const metaEl = document.getElementById("jgbMeta");
+      const errEl = document.getElementById("jgbErr");
+      const dbgEl = document.getElementById("jgbDebug");
+      errEl.textContent = ""; dbgEl.textContent = "";
+
+      const url = "https://www.mof.go.jp/english/policy/jgbs/reference/interest_rate/jgbcme.csv";
+      const { text, used } = await fetchViaProxies(url);
+      dbgEl.textContent =
+        "取得URL:\n" + url +
+        "\n\n中継:\n" + used +
+        "\n\n先頭400文字:\n" + text.slice(0,400).replaceAll("\r","");
+
+      const { rows } = parseCSV(text);
+
+      const ds = [];
+      const v2 = [], v5 = [], v10 = [], v30 = [];
+      for (const r of rows){
+        const d = toDate(r["Date"] || r["date"] || r["DATE"]);
+        if(!d) continue;
+        const s = d.toISOString().slice(0,10);
+        const y2 = parseFloat(r["2Y"]);
+        const y5 = parseFloat(r["5Y"]);
+        const y10 = parseFloat(r["10Y"]);
+        const y30 = parseFloat(r["30Y"]);
+        ds.push(s);
+        v2.push(isFinite(y2)?y2:null);
+        v5.push(isFinite(y5)?y5:null);
+        v10.push(isFinite(y10)?y10:null);
+        v30.push(isFinite(y30)?y30:null);
+      }
+
+      const { start, end } = lastNDays(ds, 260); // だいたい直近1年（営業日）
+      const labels = ds.slice(start,end);
+      const s2 = v2.slice(start,end);
+      const s5 = v5.slice(start,end);
+      const s10 = v10.slice(start,end);
+      const s30 = v30.slice(start,end);
+
+      drawMultiLine(canvas,
+        [{name:"2Y",values:s2},{name:"5Y",values:s5},{name:"10Y",values:s10},{name:"30Y",values:s30}],
+        labels.map(x=>x.slice(5)), // "MM-DD" 表示
+        { unit:"%" }
+      );
+
+      metaEl.textContent = "期間: " + labels[0] + " → " + labels[labels.length-1];
+    }
+
+    // ========= 米国債（FRED CSV：APIキー不要のfredgraph.csv） =========
+    async function loadUST(){
+      const canvas = document.getElementById("ustCanvas");
+      const metaEl = document.getElementById("ustMeta");
+      const errEl = document.getElementById("ustErr");
+      const dbgEl = document.getElementById("ustDebug");
+      errEl.textContent = ""; dbgEl.textContent = "";
+
+      const series = [
+        { key:"2Y", id:"DGS2"  },
+        { key:"5Y", id:"DGS5"  },
+        { key:"10Y",id:"DGS10" },
+        { key:"30Y",id:"DGS30" },
+      ];
+
+      async function fetchFRED(id){
+        const url = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=" + encodeURIComponent(id);
+        const { text, used } = await fetchViaProxies(url);
+        return { id, url, used, text };
+      }
+
+      const all = await Promise.all(series.map(s=>fetchFRED(s.id)));
+
+      // debug: 先頭だけまとめて
+      dbgEl.textContent =
+        all.map(x =>
+          "Series: " + x.id +
+          "\n取得URL:\n" + x.url +
+          "\n中継:\n" + x.used +
+          "\n先頭200文字:\n" + x.text.slice(0,200).replaceAll("\r","") + "\n\n"
+        ).join("\n----------------\n");
+
+      // それぞれ Date,value
+      const maps = {};
+      let baseDates = null;
+
+      for (const r of all){
+        const { rows } = parseCSV(r.text);
+        const ds = [];
+        const vs = [];
+        for (const row of rows){
+          const d = toDate(row["DATE"] || row["Date"] || row["date"]);
+          if(!d) continue;
+          const s = d.toISOString().slice(0,10);
+          const v = parseFloat(row[r.id] ?? row["VALUE"] ?? row["value"] ?? Object.values(row)[1]);
+          ds.push(s);
+          vs.push(isFinite(v)?v:null);
+        }
+        if(!baseDates) baseDates = ds;
+        // 長さズレを避けるため、日付をキーにして後で揃える
+        const m = new Map();
+        for (let i=0;i<ds.length;i++) m.set(ds[i], vs[i]);
+        maps[r.id] = m;
+      }
+
+      // 共通日付（baseDates）で揃える
+      const dates = baseDates || [];
+      const { start, end } = lastNDays(dates, 260);
+      const labels = dates.slice(start,end);
+
+      const s2 = labels.map(d=> maps["DGS2"]?.get(d) ?? null);
+      const s5 = labels.map(d=> maps["DGS5"]?.get(d) ?? null);
+      const s10= labels.map(d=> maps["DGS10"]?.get(d) ?? null);
+      const s30= labels.map(d=> maps["DGS30"]?.get(d) ?? null);
+
+      drawMultiLine(canvas,
+        [{name:"2Y",values:s2},{name:"5Y",values:s5},{name:"10Y",values:s10},{name:"30Y",values:s30}],
+        labels.map(x=>x.slice(5)),
+        { unit:"%" }
+      );
+
+      metaEl.textContent = "期間: " + labels[0] + " → " + labels[labels.length-1];
+    }
+
+    // ========= メイン =========
     async function main(){
       try{
-        setStatus("状態：読み込み中…", "ニュース見出しを取得しています。");
+        setStatus("状態：読み込み中…", "ニュース見出し＋国債データを取得しています。");
 
         const YAHOO_TOP = "https://news.yahoo.co.jp/rss/topics/top-picks.xml";
         const SAITAMA = "https://news.google.com/rss/search?q=site:saitama-np.co.jp&hl=ja&gl=JP&ceid=JP:ja";
         const BLOOMBERG = "https://news.google.com/rss/search?q=site:bloomberg.co.jp%20OR%20site:bloomberg.com&hl=ja&gl=JP&ceid=JP:ja";
-
         const BLOOMBERG_US = "https://feeds.bloomberg.com/markets/news.rss";
         const GMR = "https://www.globalmacroresearch.org/jp/feed";
-
         const YAHOO_HASHIMOTO =
           "https://news.google.com/rss/search?q=site:news.yahoo.co.jp%20%E6%A9%8B%E6%9C%AC%E6%B7%B3%E5%8F%B8&hl=ja&gl=JP&ceid=JP:ja";
 
@@ -446,11 +635,19 @@
           loadFeedTranslated(BLOOMBERG_US, "bbusList", "bbusDebug"),
           loadFeed(GMR, "gmrList", "gmrDebug"),
           loadFeed(YAHOO_HASHIMOTO, "ywaterList", "ywaterDebug"),
+
+          loadJGB2(),
+          loadUST(),
         ]);
 
         setStatus("状態：OK", "表示できました。特定枠だけダメなら、その枠の「詳細」で原因が見えます。");
       }catch(e){
         setStatus("状態：通信エラー", String(e));
+        // 個別エラー表示（国債）
+        const je = document.getElementById("jgbErr");
+        const ue = document.getElementById("ustErr");
+        if (je && !je.textContent) je.textContent = String(e);
+        if (ue && !ue.textContent) ue.textContent = String(e);
       }
     }
 
